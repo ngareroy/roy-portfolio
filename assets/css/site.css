@@ -583,6 +583,15 @@ button.chip[aria-pressed="true"] .chip__n { color: inherit; opacity: .85; }
 .rate__amt { font: 650 1.3rem/1.15 var(--font); letter-spacing: -.01em; white-space: nowrap; }
 .rate__alt { display: block; font-size: .82rem; color: var(--muted); margin-top: 2px; }
 .rate__amt--req { font-size: 1.05rem; font-weight: 600; color: var(--accent-text); }
+/* An item with options: the options sit inside the row, each with its own price and button. */
+.rateopts { grid-column: 1 / -1; list-style: none; margin: 2px 0 0; padding: 0; }
+.rateopt { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px 22px; align-items: center; padding: 10px 0 10px 14px; border-top: 1px dashed var(--line); border-radius: var(--r-sm); }
+.rateopt.is-selected { background: var(--accent-soft); }
+.rateopt__name { font-weight: 600; }
+.rateopt__note { display: block; font-size: .92rem; color: var(--ink-2); }
+.rateopt__meta { display: block; font-size: .86rem; color: var(--muted); }
+.rate__price--opt .rate__from { display: inline; margin: 0 4px 0 0; }
+.rate__price--opt .rate__amt { font-size: 1.08rem; }
 .btn--add { min-width: 9em; }
 .btn--add[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .terms { padding-block: clamp(36px, 5vw, 56px); display: grid; grid-template-columns: minmax(0, 3.4fr) minmax(0, 8fr); gap: 16px 44px; }
@@ -595,6 +604,8 @@ button.chip[aria-pressed="true"] .chip__n { color: inherit; opacity: .85; }
   .rate__main { grid-column: 1 / -1; }
   .rate__price { text-align: left; min-width: 0; }
   .btn--add { min-width: 0; }
+  .rateopt { grid-template-columns: minmax(0, 1fr) auto; padding-left: 10px; }
+  .rateopt__main { grid-column: 1 / -1; }
   .terms { grid-template-columns: 1fr; }
 }
 
@@ -760,7 +771,8 @@ button.chip[aria-pressed="true"] .chip__n { color: inherit; opacity: .85; }
   .ratelist { border: 0; border-radius: 0; }
   .rate { break-inside: avoid; grid-template-columns: minmax(0, 1fr) auto; padding: 6px 0; }
   .rate + .rate { border-top: 1px solid var(--line); }
-  .rate.is-selected { background: none; }
+  .rate.is-selected, .rateopt.is-selected { background: none; }
+  .rateopt { grid-template-columns: minmax(0, 1fr) auto; padding: 3px 0 3px 10px; break-inside: avoid; }
   .btn--add { display: none; }
   .rate__amt { font-size: 11pt; }
   .rate__inc summary { display: none; }

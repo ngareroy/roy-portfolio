@@ -379,11 +379,8 @@
   /* Lowest "from" price for a service. Add-ons and time-based prices (per hour,
      per month, per session) are skipped unless they are all the service has. */
   function serviceFromPrice(c, serviceId) {
-    var all = [];
-    ((c.rates && c.rates.categories) || []).forEach(function (cat) {
-      (cat.items || []).forEach(function (it) {
-        if (it.service === serviceId && it.price !== '' && it.price != null && !isNaN(+it.price)) all.push(it);
-      });
+    var all = rateChoices(c).filter(function (it) {
+      return it.service === serviceId && it.price !== '' && it.price != null && !isNaN(+it.price);
     });
     if (!all.length) return null;
     var timeBased = /month|hour|session|week|day\b/i;
@@ -391,12 +388,41 @@
     var pool = main.length ? main : all;
     return pool.reduce(function (m, it) { return Math.min(m, +it.price); }, Infinity);
   }
+  /* Rate card rows, one per item (an item with options is still one row). */
   function rateItems(c) {
     var out = [];
     ((c.rates && c.rates.categories) || []).forEach(function (cat) {
       (cat.items || []).forEach(function (it) { out.push(Object.assign({ category: cat.id, categoryTitle: cat.title }, it)); });
     });
     return out;
+  }
+  function hasOptions(it) { return !!(it && Array.isArray(it.options) && it.options.length); }
+  /* What a visitor can add to a quote: plain items, and each option of an item that has options.
+     An option keeps the item's details (service, add-on, includes) and has its own id, price and unit. */
+  function rateChoices(c) {
+    var out = [];
+    rateItems(c).forEach(function (it) {
+      if (!hasOptions(it)) { out.push(it); return; }
+      it.options.forEach(function (o) {
+        var x = Object.assign({}, it);
+        delete x.options;
+        out.push(Object.assign(x, {
+          id: o.id, parentId: it.id, parentName: it.name, optionName: o.name || '',
+          name: it.name + (o.name ? ': ' + o.name : ''),
+          price: o.price, unit: o.unit || it.unit || '', from: !!o.from,
+          turnaround: o.turnaround || it.turnaround || '', popular: false
+        }));
+      });
+    });
+    return out;
+  }
+  /* The price to show for a row: the item's own, or the lowest option price ("From" when options differ). */
+  function rateDisplayPrice(it) {
+    if (!hasOptions(it)) return { price: it.price, from: !!it.from };
+    var priced = it.options.filter(function (o) { return o.price !== '' && o.price != null && !isNaN(+o.price); });
+    if (!priced.length) return { price: '', from: false };
+    var low = priced.reduce(function (m, o) { return +o.price < +m.price ? o : m; });
+    return { price: low.price, from: !!low.from || it.options.length > 1 };
   }
 
   /* ---------- validation (used by the editor before saving) ---------- */
@@ -421,11 +447,21 @@
     uniq(c.projects, 'Project', 'projects');
     uniq(c.experience, 'Role', 'experience');
     uniq(c.serviceGroups, 'Service group', 'serviceGroups');
+    // Item and option IDs share one namespace: both are used in quote links (#/quote?item=<id>).
     var allItems = [];
     ((c.rates && c.rates.categories) || []).forEach(function (cat, ci) {
-      (cat.items || []).forEach(function (it, ii) { allItems.push(it); if (it.price !== '' && isNaN(+it.price)) err('rates.categories.' + ci + '.items.' + ii + '.price', '"' + it.name + '" has a price that is not a number.'); });
+      (cat.items || []).forEach(function (it, ii) {
+        var base = 'rates.categories.' + ci + '.items.' + ii;
+        allItems.push(it);
+        if (it.price !== '' && it.price != null && isNaN(+it.price)) err(base + '.price', '"' + it.name + '" has a price that is not a number.');
+        (Array.isArray(it.options) ? it.options : []).forEach(function (o, oi) {
+          allItems.push(o);
+          if (!o.name) err(base + '.options.' + oi + '.name', '"' + it.name + '" has an option without a name.');
+          if (o.price !== '' && o.price != null && isNaN(+o.price)) err(base + '.options.' + oi + '.price', 'The option "' + o.name + '" of "' + it.name + '" has a price that is not a number.');
+        });
+      });
     });
-    uniq(allItems, 'Rate item', 'rates');
+    uniq(allItems, 'Rate item or option', 'rates');
     var skills = skillIndex(c);
     [['experience', 'Role'], ['projects', 'Project'], ['services', 'Service']].forEach(function (pair) {
       (c[pair[0]] || []).forEach(function (x, i) {
@@ -466,6 +502,7 @@
     PAGES: PAGES, normBase: normBase, pageInfo: pageInfo, metaTags: metaTags, replaceBlock: replaceBlock, sharePage: sharePage,
     noscriptHtml: noscriptHtml, updateIndexHtml: updateIndexHtml,
     skillIndex: skillIndex, serviceFromPrice: serviceFromPrice, rateItems: rateItems,
+    rateChoices: rateChoices, rateDisplayPrice: rateDisplayPrice, hasOptions: hasOptions,
     validate: validate, reference: reference
   };
 });

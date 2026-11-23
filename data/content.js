@@ -769,76 +769,90 @@ window.PORTFOLIO = {
         "blurb": "On-site in Malindi and Kilifi County, or remote.",
         "items": [
           {
-            "id": "callout",
-            "name": "On-site call-out (Malindi)",
-            "price": 2000,
-            "unit": "first hour",
-            "from": false,
+            "id": "support-session",
+            "name": "Support session",
+            "price": "",
+            "unit": "",
+            "from": true,
             "popular": true,
             "addon": false,
-            "turnaround": "Same or next day",
+            "turnaround": "",
             "service": "ict-on-demand",
-            "includes": ["Diagnosis and fix on site", "KES 1,000 per extra hour"]
+            "includes": [
+              "Diagnosis and fix on site, or by screen-sharing",
+              "Remote: software, email and account problems",
+              "On-site: KES 1,000 per extra hour"
+            ],
+            "options": [
+              {
+                "id": "callout",
+                "name": "On-site call-out (Malindi)",
+                "price": 2000,
+                "unit": "first hour",
+                "from": false,
+                "turnaround": "Same or next day",
+                "note": ""
+              },
+              {
+                "id": "remote-session",
+                "name": "Remote session",
+                "price": 1000,
+                "unit": "per session (up to 1 hour)",
+                "from": false,
+                "turnaround": "Same day",
+                "note": ""
+              }
+            ]
           },
           {
-            "id": "remote-session",
-            "name": "Remote support session",
-            "price": 1000,
-            "unit": "per session (up to 1 hour)",
-            "from": false,
-            "popular": false,
-            "addon": false,
-            "turnaround": "Same day",
-            "service": "ict-on-demand",
-            "includes": ["Screen-sharing support", "Software, email and account problems"]
-          },
-          {
-            "id": "device-repair",
-            "name": "Computer troubleshooting & repair",
-            "price": 1500,
-            "unit": "per device",
+            "id": "computer-repair",
+            "name": "Computer repair & clean-up",
+            "price": "",
+            "unit": "",
             "from": true,
             "popular": false,
             "addon": false,
-            "turnaround": "1–2 days",
+            "turnaround": "",
             "service": "troubleshooting",
-            "includes": ["Diagnosis", "Software fixes and tune-up", "Parts quoted separately"]
-          },
-          {
-            "id": "os-install",
-            "name": "Operating system install with drivers",
-            "price": 2000,
-            "unit": "per device",
-            "from": false,
-            "popular": false,
-            "addon": false,
-            "turnaround": "Same day",
-            "service": "troubleshooting",
-            "includes": ["Windows or Linux install", "Drivers and essential software", "Backup of your files first"]
-          },
-          {
-            "id": "malware",
-            "name": "Virus & malware removal",
-            "price": 1500,
-            "unit": "per device",
-            "from": false,
-            "popular": false,
-            "addon": false,
-            "turnaround": "Same day",
-            "service": "troubleshooting",
-            "includes": ["Scan and clean-up", "Endpoint protection setup"]
-          },
-          {
-            "id": "data-recovery",
-            "name": "Data recovery",
-            "price": 3000,
-            "unit": "per device",
-            "from": true,
-            "popular": false,
-            "addon": false,
-            "turnaround": "1–3 days",
-            "service": "troubleshooting",
-            "includes": ["Assessment of the drive", "Recovery from deleted, formatted or failing drives"]
+            "includes": ["Diagnosis", "Software fixes and tune-up"],
+            "options": [
+              {
+                "id": "device-repair",
+                "name": "Troubleshooting, repair & tune-up",
+                "price": 1500,
+                "unit": "per device",
+                "from": true,
+                "turnaround": "1–2 days",
+                "note": "Parts quoted separately"
+              },
+              {
+                "id": "malware",
+                "name": "Virus & malware removal",
+                "price": 1500,
+                "unit": "per device",
+                "from": false,
+                "turnaround": "Same day",
+                "note": "Scan, clean-up and endpoint protection setup"
+              },
+              {
+                "id": "os-install",
+                "name": "Operating system install with drivers",
+                "price": 2000,
+                "unit": "per device",
+                "from": false,
+                "turnaround": "Same day",
+                "note": "Windows or Linux, drivers and essential software; your files backed up first"
+              },
+              {
+                "id": "data-recovery",
+                "name": "Data recovery",
+                "price": 3000,
+                "unit": "per device",
+                "from": true,
+                "turnaround": "1–3 days",
+                "note": "From deleted, formatted or failing drives"
+              }
+            ]
           },
           {
             "id": "network-setup",
@@ -868,39 +882,6 @@ window.PORTFOLIO = {
               "Priority remote and on-site support",
               "Backup and antivirus monitoring"
             ]
-          },
-          {
-            "id": "workspace-setup",
-            "name": "Google Workspace / Microsoft 365 setup",
-            "price": 5000,
-            "unit": "one-off",
-            "from": true,
-            "popular": false,
-            "addon": false,
-            "turnaround": "1–2 days",
-            "service": "workspace",
-            "includes": [
-              "Organisation account setup",
-              "Staff email accounts",
-              "Shared drives, groups and permissions",
-              "Licences billed at cost"
-            ]
-          },
-          {
-            "id": "workspace-training",
-            "name": "Staff training: Google Workspace or Microsoft 365",
-            "price": 5000,
-            "unit": "per session (up to 15 people)",
-            "from": false,
-            "popular": false,
-            "addon": false,
-            "turnaround": "Book a date",
-            "service": "workspace",
-            "includes": [
-              "Email, calendar, Drive and Docs",
-              "Sharing and permissions",
-              "Hands-on practice with your own accounts"
-            ]
           }
         ]
       },
@@ -910,56 +891,49 @@ window.PORTFOLIO = {
         "blurb": "Design, build and launch, with training so you can update it yourself.",
         "items": [
           {
-            "id": "landing-page",
-            "name": "Landing page / one-page website",
-            "price": 12000,
-            "unit": "one-off",
-            "from": true,
-            "popular": false,
-            "addon": false,
-            "turnaround": "3–5 days",
-            "service": "websites",
-            "includes": [
-              "Single scrolling page, mobile-first",
-              "Contact form and WhatsApp button",
-              "Basic SEO and analytics",
-              "One round of revisions"
-            ]
-          },
-          {
-            "id": "business-website",
-            "name": "Business or school website (up to 6 pages)",
-            "price": 30000,
+            "id": "website",
+            "name": "Website",
+            "price": "",
             "unit": "one-off",
             "from": true,
             "popular": true,
             "addon": false,
-            "turnaround": "1–2 weeks",
+            "turnaround": "",
             "service": "websites",
             "includes": [
-              "Custom design, up to 6 pages",
-              "Contact forms, map and social links",
-              "SEO setup (Search Console, sitemap)",
-              "Speed and security basics",
+              "Mobile-first design",
+              "Contact form, WhatsApp button, map and social links",
+              "SEO setup and analytics",
               "Training on updating content"
-            ]
-          },
-          {
-            "id": "org-package",
-            "name": "Organisation website package",
-            "price": 40000,
-            "unit": "one-off",
-            "from": true,
-            "popular": true,
-            "addon": false,
-            "turnaround": "2–3 weeks",
-            "service": "websites",
-            "includes": [
-              "Website design and build",
-              "Domain setup, registration or transfer",
-              "Professional email setup",
-              "SEO and business profile setup",
-              "First month of maintenance"
+            ],
+            "options": [
+              {
+                "id": "landing-page",
+                "name": "One-page website",
+                "price": 12000,
+                "unit": "one-off",
+                "from": true,
+                "turnaround": "3–5 days",
+                "note": "Single scrolling page, one round of revisions"
+              },
+              {
+                "id": "business-website",
+                "name": "Business or school website (up to 6 pages)",
+                "price": 30000,
+                "unit": "one-off",
+                "from": true,
+                "turnaround": "1–2 weeks",
+                "note": "Custom design, speed and security basics"
+              },
+              {
+                "id": "org-package",
+                "name": "Organisation website package",
+                "price": 40000,
+                "unit": "one-off",
+                "from": true,
+                "turnaround": "2–3 weeks",
+                "note": "Includes domain setup, professional email, SEO and business profile, and the first month of maintenance"
+              }
             ]
           },
           {
@@ -1015,34 +989,40 @@ window.PORTFOLIO = {
         "blurb": "Built from real experience at The Learning Hub School.",
         "items": [
           {
-            "id": "sms-full",
+            "id": "school-system",
             "name": "School management system",
-            "price": 80000,
-            "unit": "one-off setup",
+            "price": "",
+            "unit": "",
             "from": true,
             "popular": true,
             "addon": false,
-            "turnaround": "4–8 weeks",
+            "turnaround": "",
             "service": "school-systems",
             "includes": [
               "Results recording and analysis for teachers",
               "Parent access to view and track progress",
-              "Student records",
-              "User roles and access control",
               "Staff training"
+            ],
+            "options": [
+              {
+                "id": "sms-full",
+                "name": "Full system",
+                "price": 80000,
+                "unit": "one-off setup",
+                "from": true,
+                "turnaround": "4–8 weeks",
+                "note": "Adds student records and user roles with access control"
+              },
+              {
+                "id": "sms-module",
+                "name": "Results & parent progress module only",
+                "price": 35000,
+                "unit": "one-off",
+                "from": true,
+                "turnaround": "2–4 weeks",
+                "note": "Includes data import from Excel"
+              }
             ]
-          },
-          {
-            "id": "sms-module",
-            "name": "Results & parent progress module",
-            "price": 35000,
-            "unit": "one-off",
-            "from": true,
-            "popular": false,
-            "addon": false,
-            "turnaround": "2–4 weeks",
-            "service": "school-systems",
-            "includes": ["Results recording and analysis", "Parent progress view", "Data import from Excel", "Staff training"]
           },
           {
             "id": "transport-app",
@@ -1088,7 +1068,7 @@ window.PORTFOLIO = {
       },
       {
         "id": "online",
-        "title": "Business online setup & domains",
+        "title": "Business online, email & domains",
         "blurb": "Everything a business needs to be found and trusted online.",
         "items": [
           {
@@ -1134,16 +1114,52 @@ window.PORTFOLIO = {
             "includes": ["Facebook, Instagram, LinkedIn or TikTok", "Profile images, bio and links"]
           },
           {
-            "id": "business-email",
-            "name": "Professional email on your domain",
-            "price": 3500,
-            "unit": "one-off",
+            "id": "professional-email",
+            "name": "Professional email",
+            "price": "",
+            "unit": "",
             "from": true,
             "popular": false,
             "addon": false,
-            "turnaround": "1 day",
-            "service": "domains",
-            "includes": ["Mailboxes and DNS records (MX, SPF, DKIM)", "Setup on phones and computers"]
+            "turnaround": "",
+            "service": "workspace",
+            "includes": ["DNS records (MX, SPF, DKIM) so your email is delivered", "Licences billed at cost"],
+            "options": [
+              {
+                "id": "business-email",
+                "name": "Mailboxes on your domain",
+                "price": 3500,
+                "unit": "one-off",
+                "from": true,
+                "turnaround": "1 day",
+                "note": "Set up on phones and computers"
+              },
+              {
+                "id": "workspace-setup",
+                "name": "Google Workspace or Microsoft 365",
+                "price": 5000,
+                "unit": "one-off",
+                "from": true,
+                "turnaround": "1–2 days",
+                "note": "Organisation account, staff emails, shared drives, groups and permissions"
+              }
+            ]
+          },
+          {
+            "id": "workspace-training",
+            "name": "Staff training: Google Workspace or Microsoft 365",
+            "price": 5000,
+            "unit": "per session (up to 15 people)",
+            "from": false,
+            "popular": false,
+            "addon": false,
+            "turnaround": "Book a date",
+            "service": "workspace",
+            "includes": [
+              "Email, calendar, Drive and Docs",
+              "Sharing and permissions",
+              "Hands-on practice with your own accounts"
+            ]
           },
           {
             "id": "seo-setup",
@@ -1158,52 +1174,68 @@ window.PORTFOLIO = {
             "includes": ["Search Console and analytics", "Sitemap and on-page fixes", "Google Business Profile link-up"]
           },
           {
-            "id": "domain-coke",
-            "name": "Domain registration (.co.ke)",
-            "price": 1500,
-            "unit": "per year",
+            "id": "domain-registration",
+            "name": "Domain registration",
+            "price": "",
+            "unit": "",
             "from": true,
             "popular": false,
             "addon": false,
             "turnaround": "Same day",
             "service": "domains",
-            "includes": ["Registration and DNS setup", "Pointed to your website and email"]
+            "includes": ["Registration and DNS setup", "Pointed to your website and email"],
+            "options": [
+              {
+                "id": "domain-coke",
+                "name": ".co.ke",
+                "price": 1500,
+                "unit": "per year",
+                "from": true,
+                "turnaround": "Same day",
+                "note": ""
+              },
+              {
+                "id": "domain-com",
+                "name": ".com and others",
+                "price": 2500,
+                "unit": "per year",
+                "from": true,
+                "turnaround": "Same day",
+                "note": ""
+              }
+            ]
           },
           {
-            "id": "domain-com",
-            "name": "Domain registration (.com and others)",
-            "price": 2500,
-            "unit": "per year",
+            "id": "transfers-hosting",
+            "name": "Transfers & hosting",
+            "price": "",
+            "unit": "",
             "from": true,
             "popular": false,
             "addon": false,
-            "turnaround": "Same day",
+            "turnaround": "",
             "service": "domains",
-            "includes": ["Registration and DNS setup", "Pointed to your website and email"]
-          },
-          {
-            "id": "domain-transfer",
-            "name": "Domain transfer",
-            "price": 2000,
-            "unit": "per domain",
-            "from": true,
-            "popular": false,
-            "addon": false,
-            "turnaround": "5–7 days",
-            "service": "domains",
-            "includes": ["Transfer to a new registrar", "Website and email kept working during the move"]
-          },
-          {
-            "id": "hosting-setup",
-            "name": "Website transfer or hosting setup",
-            "price": 3000,
-            "unit": "one-off",
-            "from": true,
-            "popular": false,
-            "addon": false,
-            "turnaround": "1–2 days",
-            "service": "domains",
-            "includes": ["Choosing a suitable host", "Website and email transfer", "SSL certificate setup"]
+            "includes": [],
+            "options": [
+              {
+                "id": "domain-transfer",
+                "name": "Domain transfer",
+                "price": 2000,
+                "unit": "per domain",
+                "from": true,
+                "turnaround": "5–7 days",
+                "note": "Website and email kept working during the move"
+              },
+              {
+                "id": "hosting-setup",
+                "name": "Website transfer or hosting setup",
+                "price": 3000,
+                "unit": "one-off",
+                "from": true,
+                "turnaround": "1–2 days",
+                "note": "Choosing a suitable host, website and email transfer, SSL certificate"
+              }
+            ]
           }
         ]
       },
@@ -1213,16 +1245,36 @@ window.PORTFOLIO = {
         "blurb": "Make sense of your data and get your team confident with AI.",
         "items": [
           {
-            "id": "data-analysis",
-            "name": "Data cleaning & analysis",
-            "price": 5000,
-            "unit": "per project",
+            "id": "data-analysis-services",
+            "name": "Data analysis",
+            "price": "",
+            "unit": "",
             "from": true,
             "popular": false,
             "addon": false,
-            "turnaround": "2–5 days",
+            "turnaround": "",
             "service": "data-analysis",
-            "includes": ["Cleaning and quality checks", "Analysis and a short report"]
+            "includes": [],
+            "options": [
+              {
+                "id": "data-analysis",
+                "name": "Per project",
+                "price": 5000,
+                "unit": "per project",
+                "from": true,
+                "turnaround": "2–5 days",
+                "note": "Cleaning, quality checks, analysis and a short report"
+              },
+              {
+                "id": "analyst-hourly",
+                "name": "Hourly",
+                "price": 1500,
+                "unit": "per hour",
+                "from": false,
+                "turnaround": "Flexible",
+                "note": "Remote, flexible hours"
+              }
+            ]
           },
           {
             "id": "dashboard",
@@ -1235,18 +1287,6 @@ window.PORTFOLIO = {
             "turnaround": "3–7 days",
             "service": "data-analysis",
             "includes": ["Excel or Google Sheets dashboard", "Automated summaries"]
-          },
-          {
-            "id": "analyst-hourly",
-            "name": "Data analyst (hourly)",
-            "price": 1500,
-            "unit": "per hour",
-            "from": false,
-            "popular": false,
-            "addon": false,
-            "turnaround": "Flexible",
-            "service": "data-analysis",
-            "includes": ["Remote, flexible hours"]
           },
           {
             "id": "ai-setup",
@@ -1265,28 +1305,36 @@ window.PORTFOLIO = {
             ]
           },
           {
-            "id": "ai-workshop",
-            "name": "AI training workshop",
-            "price": 15000,
-            "unit": "per half-day session (up to 20 people)",
-            "from": false,
+            "id": "ai-training",
+            "name": "AI training",
+            "price": "",
+            "unit": "",
+            "from": true,
             "popular": false,
             "addon": false,
-            "turnaround": "Book a date",
+            "turnaround": "",
             "service": "ai-training",
-            "includes": ["Hands-on, practical session", "Materials and follow-up Q&A"]
-          },
-          {
-            "id": "ai-coaching",
-            "name": "1-on-1 AI or digital skills coaching",
-            "price": 2000,
-            "unit": "per hour",
-            "from": false,
-            "popular": false,
-            "addon": false,
-            "turnaround": "Book a time",
-            "service": "ai-training",
-            "includes": ["In person or remote"]
+            "includes": [],
+            "options": [
+              {
+                "id": "ai-workshop",
+                "name": "Workshop (half day, up to 20 people)",
+                "price": 15000,
+                "unit": "per session",
+                "from": false,
+                "turnaround": "Book a date",
+                "note": "Hands-on, practical session with materials and follow-up Q&A"
+              },
+              {
+                "id": "ai-coaching",
+                "name": "1-on-1 AI or digital skills coaching",
+                "price": 2000,
+                "unit": "per hour",
+                "from": false,
+                "turnaround": "Book a time",
+                "note": "In person or remote"
+              }
+            ]
           },
           {
             "id": "ai-prototype",
@@ -1332,18 +1380,6 @@ window.PORTFOLIO = {
             "includes": ["User flows and wireframes", "High-fidelity screens", "Clickable prototype"]
           },
           {
-            "id": "usability-test",
-            "name": "Usability testing (5 users)",
-            "price": 12000,
-            "unit": "per round",
-            "from": true,
-            "popular": false,
-            "addon": false,
-            "turnaround": "1 week",
-            "service": "ux-testing",
-            "includes": ["Test plan and tasks", "Moderated sessions", "Findings and prioritised fixes"]
-          },
-          {
             "id": "qa-round",
             "name": "App or website QA testing",
             "price": 8000,
@@ -1356,16 +1392,36 @@ window.PORTFOLIO = {
             "includes": ["Android, iOS and browser testing", "Bug reports with steps and screenshots", "Retest after fixes"]
           },
           {
-            "id": "ux-review",
-            "name": "UX review / audit",
-            "price": 8000,
-            "unit": "one-off",
+            "id": "ux-review-testing",
+            "name": "UX review & usability testing",
+            "price": "",
+            "unit": "",
             "from": true,
             "popular": false,
             "addon": false,
-            "turnaround": "3–5 days",
+            "turnaround": "",
             "service": "ux-testing",
-            "includes": ["Expert review of key flows", "Prioritised recommendations"]
+            "includes": [],
+            "options": [
+              {
+                "id": "ux-review",
+                "name": "UX review / audit",
+                "price": 8000,
+                "unit": "one-off",
+                "from": true,
+                "turnaround": "3–5 days",
+                "note": "Expert review of key flows, with prioritised recommendations"
+              },
+              {
+                "id": "usability-test",
+                "name": "Usability testing with 5 users",
+                "price": 12000,
+                "unit": "per round",
+                "from": true,
+                "turnaround": "1 week",
+                "note": "Test plan and tasks, moderated sessions, findings and prioritised fixes"
+              }
+            ]
           }
         ]
       }

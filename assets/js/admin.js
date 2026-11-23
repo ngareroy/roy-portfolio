@@ -147,10 +147,17 @@
           { k: 'blurb', t: 'text', label: 'Short description' },
           { k: 'items', t: 'list', label: 'Prices', itemLabel: 'name', itemSub: 'price', idFrom: 'name', addLabel: 'Add a price', newItem: { from: true, unit: 'one-off' }, item: [
             { k: 'name', t: 'text', label: 'Item name' },
-            { row: [{ k: 'price', t: 'number', label: 'Price (KES)', help: 'Leave empty to show “On request”.' }, { k: 'unit', t: 'text', label: 'Unit', help: 'e.g. one-off, per month, per device' }, { k: 'turnaround', t: 'text', label: 'Turnaround' }] },
+            { row: [{ k: 'price', t: 'number', label: 'Price (KES)', help: 'Leave empty to show “On request”. Not used if the item has options.' }, { k: 'unit', t: 'text', label: 'Unit', help: 'e.g. one-off, per month, per device' }, { k: 'turnaround', t: 'text', label: 'Turnaround' }] },
             { row: [{ k: 'from', t: 'bool', label: 'Starting price ("From")' }, { k: 'popular', t: 'bool', label: 'Popular (shown on profile)' }, { k: 'addon', t: 'bool', label: 'Add-on (ignored for service "from" prices)' }] },
             { k: 'service', t: 'select', label: 'Linked service', options: serviceOptsNone },
             { k: 'includes', t: 'lines', rows: 4, label: 'What’s included', help: 'One per line.' },
+            { k: 'options', t: 'list', label: 'Options', itemLabel: 'name', itemSub: 'price', idFrom: 'name', addLabel: 'Add an option', newItem: { from: false },
+              help: 'Optional. Give one item several choices, each with its own price (e.g. on-site / remote). Visitors add an option to their quote. The row then shows the lowest option price.', item: [
+              { row: [{ k: 'name', t: 'text', label: 'Option name' }, { k: 'price', t: 'number', label: 'Price (KES)', help: 'Empty = “On request”.' }, { k: 'unit', t: 'text', label: 'Unit', help: 'Leave empty to use the item’s unit.' }] },
+              { k: 'note', t: 'text', label: 'Short note', help: 'Optional. What makes this option different, e.g. “Includes domain and email”.' },
+              { row: [{ k: 'turnaround', t: 'text', label: 'Turnaround', help: 'Leave empty to use the item’s.' }, { k: 'from', t: 'bool', label: 'Starting price ("From")' }] },
+              { k: 'id', t: 'slug', label: 'ID', help: 'Used in quote links. Must differ from every other item and option ID.' }
+            ] },
             { k: 'id', t: 'slug', label: 'ID' }
           ] }
         ] },
@@ -342,6 +349,20 @@
     while (list.some(function (x) { return x !== self && x.id === out; })) out = id + '-' + (n++);
     return out;
   }
+  /* A new ID for an item in the list at listPath. Rate items and options share one set of IDs
+     (quote links use them), and an option's ID starts with its item's, e.g. "support-session-remote". */
+  var RATE_LIST = /^rates\.categories\.\d+\.items(\.\d+\.options)?$/;
+  function ratePool() {
+    var pool = [];
+    RN.rateItems(draft).forEach(function (it) { pool.push(it); (it.options || []).forEach(function (o) { pool.push(o); }); });
+    return pool;
+  }
+  function newListId(listPath, item, title) {
+    var m = RATE_LIST.exec(listPath);
+    if (!m) return uniqueId(RN.getPath(draft, listPath) || [], title, item);
+    var parent = m[1] ? RN.getPath(draft, listPath.replace(/\.options$/, '')) : null;
+    return uniqueId(ratePool(), (parent && parent.id ? parent.id + ' ' : '') + title, item);
+  }
   /* Give every list item that needs an ID one, based on its title. */
   function ensureIds() {
     SECTIONS.forEach(function (s) {
@@ -353,7 +374,7 @@
           var list = RN.getPath(draft, path);
           if (!Array.isArray(list)) return;
           list.forEach(function (item, i) {
-            if (f.idFrom && item && !item.id) item.id = uniqueId(list, item[f.idFrom] || 'item', item);
+            if (f.idFrom && item && !item.id) item.id = newListId(path, item, item[f.idFrom] || 'item');
             walk(f.item, path + '.' + i);
           });
         });
@@ -496,7 +517,7 @@
     if (pl && lists[pl.list] && lists[pl.list].idFrom === pl.key) {
       var item = RN.getPath(draft, pl.item);
       if (item && !item.id && item[pl.key]) {
-        item.id = uniqueId(RN.getPath(draft, pl.list), item[pl.key], item);
+        item.id = newListId(pl.list, item, item[pl.key]);
         var idEl = document.querySelector('[data-path="' + cssEsc(pl.item + '.id') + '"]');
         if (idEl) idEl.value = item.id;
         touch();
@@ -601,7 +622,12 @@
           item = clone(list[idx]);
           var lf = lists[pl.list];
           if (lf && lf.itemLabel && item[lf.itemLabel]) item[lf.itemLabel] += ' (copy)';
-          if ('id' in item) item.id = uniqueId(list, (item.id || 'item') + '-copy', item);
+          if (RATE_LIST.test(pl.list)) {
+            // Rate items and options share one set of IDs, so a copy (and each of its options) gets new ones.
+            var pool = ratePool();
+            item.id = uniqueId(pool, (item.id || 'item') + '-copy', item); pool.push(item);
+            (Array.isArray(item.options) ? item.options : []).forEach(function (o) { o.id = uniqueId(pool, item.id + ' ' + (o.name || 'option'), o); pool.push(o); });
+          } else if ('id' in item) item.id = uniqueId(list, (item.id || 'item') + '-copy', item);
           list.splice(idx + 1, 0, item);
           openItems[pl.list + '.' + (idx + 1)] = true;
         }
@@ -885,8 +911,20 @@
   function ghLoad(quiet) {
     if (dirty && !quiet && !window.confirm('Load the version on GitHub? Your unsaved changes here will be replaced.')) return Promise.resolve();
     setStatus('Loading from GitHub…', dirty);
+    var before = JSON.stringify(draft);
     return ghGetFile('data/content.js').then(function (f) {
       var c = RN.parseContentJs(f.text);
+      if (quiet && draft && JSON.stringify(draft) !== before) {
+        // Edits were made (or a draft restored) while this background load ran: keep them. If GitHub
+        // holds a different version than the one being edited, saving shows the conflict choice.
+        var mine = draft;
+        draft = clone(c); normalizeDraft();
+        var same = JSON.stringify(draft) === JSON.stringify(original);
+        draft = mine;
+        baseSha = same ? f.sha : 'outdated';
+        setStatus('Unsaved changes', true);
+        return;
+      }
       baseSha = f.sha;
       var keepEditor = draft && draft.settings && draft.settings.editor;
       original = clone(c); draft = clone(c);

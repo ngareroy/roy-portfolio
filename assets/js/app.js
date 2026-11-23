@@ -177,9 +177,10 @@
     c.rates = c.rates || {};
     c.rates.categories = arr(c.rates.categories);
     c.rates.terms = arr(c.rates.terms);
-    c.rates.categories.forEach(function (cat) { cat.items = arr(cat.items); cat.items.forEach(function (it) { it.includes = arr(it.includes); }); });
+    c.rates.categories.forEach(function (cat) { cat.items = arr(cat.items); cat.items.forEach(function (it) { it.includes = arr(it.includes); it.options = arr(it.options).filter(function (o) { return o && o.id; }); }); });
     c.share = c.share || {};
-    var ids = RN.rateItems(c).map(function (x) { return x.id; });
+    // Drop basket entries that no longer exist (an entry is a plain item or one option of an item).
+    var ids = RN.rateChoices(c).map(function (x) { return x.id; });
     state.basket = arr(state.basket).filter(function (b) { return b && ids.indexOf(b.id) >= 0; });
   }
   function loadContent() {
@@ -254,7 +255,7 @@
     updateBasketUI();
   }
   function basketItems() {
-    var all = RN.rateItems(C);
+    var all = RN.rateChoices(C);
     return state.basket.map(function (b) {
       var it = byId(all, b.id);
       return it ? Object.assign({ qty: Math.max(1, +b.qty || 1) }, it) : null;
@@ -278,7 +279,7 @@
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
       b.innerHTML = on ? icon('check') + 'Added' : icon('plus') + 'Add to quote';
     });
-    document.querySelectorAll('.rate[data-id]').forEach(function (row) {
+    document.querySelectorAll('.rate[data-id], .rateopt[data-id]').forEach(function (row) {
       row.classList.toggle('is-selected', inBasket(row.getAttribute('data-id')));
     });
     renderBasketBar();
@@ -364,8 +365,10 @@
         target.classList.add('is-target');
         setTimeout(function () { target.scrollIntoView({ block: 'start' }); }, 30);
       } else window.scrollTo(0, 0);
+      // Move focus to the new page for keyboard and screen reader users. Inside the editor's live preview,
+      // only do that if the preview already has focus: otherwise it would take focus from the field being typed in.
       var main = document.getElementById('main');
-      if (main) main.focus({ preventScroll: true });
+      if (main && (!PREVIEW || document.hasFocus())) main.focus({ preventScroll: true });
       announce(document.title);
     }
     updateBasketUI();
@@ -559,10 +562,14 @@
       '<header class="sec__head sec__head--split"><div>' + eyebrow('Rates') + '<h2 class="sec__title" id="rt-h">Popular starting prices</h2></div>' +
       '<a class="link-arrow" href="#/rates">Full rate card ' + icon('arrowRight') + '</a></header>' +
       '<div class="ptags">' + pop.map(function (it) {
+        var p = RN.rateDisplayPrice(it), opts = RN.hasOptions(it);
+        var unit = opts ? it.options.length + ' options' : (it.unit || '');
         return '<article class="ptag"><span class="ptag__cat">' + e(it.categoryTitle) + '</span><h3 class="ptag__name">' + e(it.name) + '</h3>' +
-          '<p class="ptag__amt"><small>' + (hasPrice(it) ? (it.from ? 'From' : 'Price') : 'Price') + '</small>' + e(price(it.price)) + '</p>' +
-          '<p class="ptag__unit">' + e(it.unit || '') + (it.turnaround ? ' · ' + e(it.turnaround) : '') + '</p>' +
-          '<button type="button" class="btn btn--sm btn--add" data-action="basket" data-item="' + e(it.id) + '" aria-label="Add ' + e(it.name) + ' to quote" aria-pressed="false">' + icon('plus') + 'Add to quote</button></article>';
+          '<p class="ptag__amt"><small>' + (hasPrice(p) ? (p.from ? 'From' : 'Price') : 'Price') + '</small>' + e(price(p.price)) + '</p>' +
+          '<p class="ptag__unit">' + e(unit) + (it.turnaround ? ' · ' + e(it.turnaround) : '') + '</p>' +
+          (opts
+            ? '<a class="btn btn--sm btn--add" href="#/rates?c=' + encodeURIComponent(it.category) + '" aria-label="Choose an option for ' + e(it.name) + '">' + icon('arrowRight') + 'Choose an option</a>'
+            : '<button type="button" class="btn btn--sm btn--add" data-action="basket" data-item="' + e(it.id) + '" aria-label="Add ' + e(it.name) + ' to quote" aria-pressed="false">' + icon('plus') + 'Add to quote</button>') + '</article>';
       }).join('') + '</div>' +
       '<div class="sec__more"><a class="btn btn--primary" href="#/rates">See all ' + items.length + ' prices ' + icon('arrowRight') + '</a>' +
       '<button type="button" class="btn" data-action="share" data-page="rates">' + icon('share') + 'Share the rate card</button></div></div></section>';
@@ -843,7 +850,8 @@
     var html = C.rates.categories.map(function (cat) {
       var items = cat.items.filter(function (it) {
         if (!q) return true;
-        return (it.name + ' ' + it.includes.join(' ') + ' ' + (it.unit || '')).toLowerCase().indexOf(q) >= 0;
+        var optText = it.options.map(function (o) { return o.name + ' ' + (o.note || '') + ' ' + (o.unit || ''); }).join(' ');
+        return (it.name + ' ' + it.includes.join(' ') + ' ' + (it.unit || '') + ' ' + optText).toLowerCase().indexOf(q) >= 0;
       });
       shown += items.length;
       if (!items.length) return '';
@@ -860,16 +868,36 @@
     }
     return (q ? '<p class="results-note" role="status">' + shown + (shown === 1 ? ' matching price' : ' matching prices') + '</p>' : '') + html;
   }
+  function ratePrice(p, cls) {
+    var alt = state.currency === 'USD' && hasPrice(p) ? '<span class="rate__alt">' + e(RN.money(p.price, 'KES')) + '</span>' : '';
+    // Rows keep an empty "From" line so prices line up; option prices sit on one line and show "From" only when needed.
+    var from = p.from && hasPrice(p) ? 'From' : (cls ? '' : '&nbsp;');
+    return '<div class="rate__price' + (cls ? ' ' + cls : '') + '">' + (from ? '<span class="rate__from">' + from + '</span>' : '') + '<span class="rate__amt' + (hasPrice(p) ? '' : ' rate__amt--req') + '">' + e(price(p.price)) + '</span>' + alt + '</div>';
+  }
+  function addBtn(id, label) {
+    var on = inBasket(id);
+    return '<button type="button" class="btn btn--sm btn--add" data-action="basket" data-item="' + e(id) + '" data-fk="b:' + e(id) + '" aria-label="Add ' + e(label) + ' to quote" aria-pressed="' + on + '">' + (on ? icon('check') + 'Added' : icon('plus') + 'Add to quote') + '</button>';
+  }
   function rateRow(it) {
-    var on = inBasket(it.id);
-    var alt = state.currency === 'USD' ? '<span class="rate__alt">' + e(RN.money(it.price, 'KES')) + '</span>' : '';
-    return '<li class="rate' + (on ? ' is-selected' : '') + '" data-id="' + e(it.id) + '">' +
-      '<div class="rate__main"><h3 class="rate__name">' + e(it.name) + (it.popular ? '<span class="badge badge--popular">Popular</span>' : '') + '</h3>' +
-      '<p class="rate__meta">' + (it.unit ? '<span>' + icon('tag') + e(it.unit) + '</span>' : '') + (it.turnaround ? '<span>' + icon('clock') + e(it.turnaround) + '</span>' : '') + '</p>' +
+    var opts = RN.hasOptions(it);
+    var on = !opts && inBasket(it.id);
+    var head = '<div class="rate__main"><h3 class="rate__name" id="rn-' + e(it.id) + '">' + e(it.name) + (it.popular ? '<span class="badge badge--popular">Popular</span>' : '') + '</h3>' +
+      '<p class="rate__meta">' + (it.unit ? '<span>' + icon('tag') + e(it.unit) + '</span>' : '') + (it.turnaround ? '<span>' + icon('clock') + e(it.turnaround) + '</span>' : '') +
+      (opts ? '<span>' + it.options.length + ' options</span>' : '') + '</p>' +
       (it.includes.length ? '<details class="rate__inc"><summary>' + icon('plus') + 'What’s included</summary><ul class="ticks">' + it.includes.map(function (x) { return '<li>' + icon('check') + '<span>' + ef(x) + '</span></li>'; }).join('') + '</ul></details>' : '') +
-      '</div>' +
-      '<div class="rate__price"><span class="rate__from">' + (it.from && hasPrice(it) ? 'From' : '&nbsp;') + '</span><span class="rate__amt' + (hasPrice(it) ? '' : ' rate__amt--req') + '">' + e(price(it.price)) + '</span>' + (hasPrice(it) ? alt : '') + '</div>' +
-      '<button type="button" class="btn btn--sm btn--add" data-action="basket" data-item="' + e(it.id) + '" data-fk="b:' + e(it.id) + '" aria-label="Add ' + e(it.name) + ' to quote" aria-pressed="' + on + '">' + (on ? icon('check') + 'Added' : icon('plus') + 'Add to quote') + '</button></li>';
+      '</div>';
+    if (!opts) {
+      return '<li class="rate' + (on ? ' is-selected' : '') + '" data-id="' + e(it.id) + '">' + head + ratePrice(it) + addBtn(it.id, it.name) + '</li>';
+    }
+    // An item with options: one row, with each option (its own price and button) listed inside it.
+    return '<li class="rate rate--opts" data-parent="' + e(it.id) + '">' + head + ratePrice(RN.rateDisplayPrice(it)) +
+      '<ul class="rateopts" aria-labelledby="rn-' + e(it.id) + '">' + it.options.map(function (o) {
+        var p = { price: o.price, from: !!o.from };
+        var meta = [o.unit, o.turnaround].filter(Boolean);
+        return '<li class="rateopt' + (inBasket(o.id) ? ' is-selected' : '') + '" data-id="' + e(o.id) + '">' +
+          '<div class="rateopt__main"><span class="rateopt__name">' + e(o.name) + '</span>' + (o.note ? '<span class="rateopt__note">' + ef(o.note) + '</span>' : '') + (meta.length ? '<span class="rateopt__meta">' + e(meta.join(' · ')) + '</span>' : '') + '</div>' +
+          ratePrice(p, 'rate__price--opt') + addBtn(o.id, it.name + ': ' + o.name) + '</li>';
+      }).join('') + '</ul></li>';
   }
 
   /* ----- quote ----- */
@@ -895,7 +923,7 @@
       if (list.indexOf(s) < 0) { list.push(s); state.form.services = list; changed = true; }
     }
     var item = q.get('item');
-    if (item && !inBasket(item) && byId(RN.rateItems(C), item)) { state.basket.push({ id: item, qty: 1 }); saveBasket(); }
+    if (item && !inBasket(item) && byId(RN.rateChoices(C), item)) { state.basket.push({ id: item, qty: 1 }); saveBasket(); }
     if (changed || s || t) { state.sent = null; saveForm(); }
   }
   function saveForm() { sstore.set('form', state.form); sstore.set('enquiry', state.enquiry); }
