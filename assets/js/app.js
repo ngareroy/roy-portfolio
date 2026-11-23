@@ -1094,10 +1094,16 @@
         .then(function (r) { if (!r.ok) throw new Error('The form service answered with status ' + r.status + '.'); return { ok: true }; });
     } else if (provider === 'formsubmit') {
       var to = fs.email || C.profile.email;
+      // Sent form-encoded on purpose: with only an Accept header this is a CORS "simple request",
+      // so the browser skips the OPTIONS preflight. FormSubmit is often slow (10-30 s per round trip),
+      // and the preflight alone could use up most of the time limit.
+      var fsBody = new URLSearchParams();
+      var fsData = Object.assign({ _subject: subjectLine(d), _template: 'table', _captcha: 'false', _replyto: d.email }, compact(d));
+      Object.keys(fsData).forEach(function (k) { fsBody.append(k, fsData[k]); });
       req = fetch('https://formsubmit.co/ajax/' + encodeURIComponent(to), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(Object.assign({ _subject: subjectLine(d), _template: 'table', _captcha: 'false', _replyto: d.email }, compact(d)))
+        headers: { Accept: 'application/json' },
+        body: fsBody
       }).then(function (r) {
         return r.json().catch(function () { return {}; }).then(function (j) {
           if (!r.ok || String(j.success) !== 'true') throw new Error(j.message || ('The form service answered with status ' + r.status + '.'));
@@ -1127,9 +1133,13 @@
     } else {
       return Promise.reject(new Error('The form is not set up yet (unknown provider "' + provider + '").'));
     }
-    var timeout = new Promise(function (_, rej) { setTimeout(function () { rej(new Error('The form service took too long to answer.')); }, 20000); });
+    var timeout = new Promise(function (_, rej) {
+      setTimeout(function () { var err = new Error('The form service did not answer in time.'); err.timedOut = true; rej(err); }, FORM_TIMING.timeout);
+    });
     return Promise.race([req, timeout]);
   }
+  // How long to wait before showing "still sending" and before giving up. Tests may shorten these.
+  var FORM_TIMING = Object.assign({ slow: 8000, timeout: 60000 }, window.__RN_FORM_TIMING || {});
   function submitQuote(form) {
     state.tried = true;
     var errs = validateForm();
@@ -1148,7 +1158,15 @@
     var btn = document.getElementById('q-submit');
     if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
     form.setAttribute('aria-busy', 'true');
+    var slowTimer = setTimeout(function () {
+      if (!state.sending) return;
+      var b = document.getElementById('q-submit');
+      if (b) b.textContent = 'Still sending…';
+      var al = document.getElementById('q-alert');
+      if (al) al.innerHTML = '<p class="fineprint" id="q-slow">The form service is slow right now. Please keep this page open; it can take up to a minute.</p>';
+    }, FORM_TIMING.slow);
     sendPayload(d, hp && hp.value).then(function (res) {
+      clearTimeout(slowTimer);
       state.sending = false;
       state.sent = { ref: d.reference, name: d.name, method: d.contact_method, text: payloadText(d), demo: !!res.demo, handoff: res.handoff || '' };
       if (d.enquiry_type === TYPES.quote.label) { state.basket = []; saveBasket(); }
@@ -1161,8 +1179,9 @@
       if (h) { h.focus(); }
       window.scrollTo({ top: Math.max(0, document.getElementById('qform-wrap').getBoundingClientRect().top + window.scrollY - 100) });
     }).catch(function (err) {
+      clearTimeout(slowTimer);
       state.sending = false;
-      state.sendError = { msg: err && err.message ? err.message : 'Something went wrong.', text: payloadText(d), subject: subjectLine(d) };
+      state.sendError = { msg: err && err.message ? err.message : 'Something went wrong.', timedOut: !!(err && err.timedOut), text: payloadText(d), subject: subjectLine(d) };
       var b = document.getElementById('q-submit');
       if (b) { b.disabled = false; b.innerHTML = 'Try again ' + icon('send'); }
       form.removeAttribute('aria-busy');
@@ -1173,7 +1192,11 @@
   function sendErrorHtml() {
     var se = state.sendError;
     if (!se) return '';
-    return '<div class="alert" role="alert">' + icon('alert') + '<div><p><b>Your request was not sent.</b> ' + e(se.msg) + ' Nothing you typed has been lost.</p>' +
+    // A timeout does not mean the request failed: a slow service often still delivers it.
+    var lead = se.timedOut
+      ? '<b>Your request was not confirmed.</b> The form service did not answer within a minute, so it may still arrive. To be sure it reaches me, send it on WhatsApp or by email.'
+      : '<b>Your request was not sent.</b> ' + e(se.msg);
+    return '<div class="alert' + (se.timedOut ? ' alert--wait' : '') + '" role="alert">' + icon('alert') + '<div><p>' + lead + ' Nothing you typed has been lost.</p>' +
       '<div class="qactions">' +
       ((C.profile.whatsapp || C.profile.phone) ? '<a class="btn btn--sm btn--ink" href="' + e(waLink(se.text)) + '" target="_blank" rel="noopener">' + icon('chat') + 'Send on WhatsApp</a>' : '') +
       (C.profile.email ? '<a class="btn btn--sm" href="' + e(mailLink(se.subject, se.text)) + '">' + icon('mail') + 'Send by email</a>' : '') +
