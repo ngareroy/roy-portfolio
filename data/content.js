@@ -11,7 +11,7 @@
 window.PORTFOLIO = {
   "meta": {
     "schema": 1,
-    "updated": "2026-11-23"
+    "updated": "2026-11-24"
   },
   "settings": {
     "siteUrl": "https://ngareroy.github.io/roy-portfolio/",
