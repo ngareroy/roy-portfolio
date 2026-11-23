@@ -764,6 +764,147 @@ window.PORTFOLIO = {
     ],
     "categories": [
       {
+        "id": "it",
+        "title": "IT support & troubleshooting",
+        "blurb": "On-site in Malindi and Kilifi County, or remote.",
+        "items": [
+          {
+            "id": "callout",
+            "name": "On-site call-out (Malindi)",
+            "price": 2000,
+            "unit": "first hour",
+            "from": false,
+            "popular": true,
+            "addon": false,
+            "turnaround": "Same or next day",
+            "service": "ict-on-demand",
+            "includes": ["Diagnosis and fix on site", "KES 1,000 per extra hour"]
+          },
+          {
+            "id": "remote-session",
+            "name": "Remote support session",
+            "price": 1000,
+            "unit": "per session (up to 1 hour)",
+            "from": false,
+            "popular": false,
+            "addon": false,
+            "turnaround": "Same day",
+            "service": "ict-on-demand",
+            "includes": ["Screen-sharing support", "Software, email and account problems"]
+          },
+          {
+            "id": "device-repair",
+            "name": "Computer troubleshooting & repair",
+            "price": 1500,
+            "unit": "per device",
+            "from": true,
+            "popular": false,
+            "addon": false,
+            "turnaround": "1–2 days",
+            "service": "troubleshooting",
+            "includes": ["Diagnosis", "Software fixes and tune-up", "Parts quoted separately"]
+          },
+          {
+            "id": "os-install",
+            "name": "Operating system install with drivers",
+            "price": 2000,
+            "unit": "per device",
+            "from": false,
+            "popular": false,
+            "addon": false,
+            "turnaround": "Same day",
+            "service": "troubleshooting",
+            "includes": ["Windows or Linux install", "Drivers and essential software", "Backup of your files first"]
+          },
+          {
+            "id": "malware",
+            "name": "Virus & malware removal",
+            "price": 1500,
+            "unit": "per device",
+            "from": false,
+            "popular": false,
+            "addon": false,
+            "turnaround": "Same day",
+            "service": "troubleshooting",
+            "includes": ["Scan and clean-up", "Endpoint protection setup"]
+          },
+          {
+            "id": "data-recovery",
+            "name": "Data recovery",
+            "price": 3000,
+            "unit": "per device",
+            "from": true,
+            "popular": false,
+            "addon": false,
+            "turnaround": "1–3 days",
+            "service": "troubleshooting",
+            "includes": ["Assessment of the drive", "Recovery from deleted, formatted or failing drives"]
+          },
+          {
+            "id": "network-setup",
+            "name": "Office network & Wi-Fi setup",
+            "price": 8000,
+            "unit": "labour",
+            "from": true,
+            "popular": false,
+            "addon": false,
+            "turnaround": "1–3 days",
+            "service": "it-support",
+            "includes": ["Router and access point setup", "Secure Wi-Fi and guest network", "Equipment billed at cost"]
+          },
+          {
+            "id": "it-plan",
+            "name": "Monthly IT support plan",
+            "price": 12000,
+            "unit": "per month",
+            "from": true,
+            "popular": true,
+            "addon": false,
+            "turnaround": "Ongoing",
+            "service": "ict-on-demand",
+            "includes": [
+              "Up to 10 devices",
+              "Monthly on-site check-up",
+              "Priority remote and on-site support",
+              "Backup and antivirus monitoring"
+            ]
+          },
+          {
+            "id": "workspace-setup",
+            "name": "Google Workspace / Microsoft 365 setup",
+            "price": 5000,
+            "unit": "one-off",
+            "from": true,
+            "popular": false,
+            "addon": false,
+            "turnaround": "1–2 days",
+            "service": "workspace",
+            "includes": [
+              "Organisation account setup",
+              "Staff email accounts",
+              "Shared drives, groups and permissions",
+              "Licences billed at cost"
+            ]
+          },
+          {
+            "id": "workspace-training",
+            "name": "Staff training: Google Workspace or Microsoft 365",
+            "price": 5000,
+            "unit": "per session (up to 15 people)",
+            "from": false,
+            "popular": false,
+            "addon": false,
+            "turnaround": "Book a date",
+            "service": "workspace",
+            "includes": [
+              "Email, calendar, Drive and Docs",
+              "Sharing and permissions",
+              "Hands-on practice with your own accounts"
+            ]
+          }
+        ]
+      },
+      {
         "id": "web",
         "title": "Websites & web apps",
         "blurb": "Design, build and launch, with training so you can update it yourself.",
@@ -942,147 +1083,6 @@ window.PORTFOLIO = {
             "turnaround": "Ongoing",
             "service": "school-systems",
             "includes": ["Secure hosting and backups", "Bug fixes and small updates", "Priority support"]
-          }
-        ]
-      },
-      {
-        "id": "it",
-        "title": "IT support & troubleshooting",
-        "blurb": "On-site in Malindi and Kilifi County, or remote.",
-        "items": [
-          {
-            "id": "callout",
-            "name": "On-site call-out (Malindi)",
-            "price": 2000,
-            "unit": "first hour",
-            "from": false,
-            "popular": true,
-            "addon": false,
-            "turnaround": "Same or next day",
-            "service": "ict-on-demand",
-            "includes": ["Diagnosis and fix on site", "KES 1,000 per extra hour"]
-          },
-          {
-            "id": "remote-session",
-            "name": "Remote support session",
-            "price": 1000,
-            "unit": "per session (up to 1 hour)",
-            "from": false,
-            "popular": false,
-            "addon": false,
-            "turnaround": "Same day",
-            "service": "ict-on-demand",
-            "includes": ["Screen-sharing support", "Software, email and account problems"]
-          },
-          {
-            "id": "device-repair",
-            "name": "Computer troubleshooting & repair",
-            "price": 1500,
-            "unit": "per device",
-            "from": true,
-            "popular": false,
-            "addon": false,
-            "turnaround": "1–2 days",
-            "service": "troubleshooting",
-            "includes": ["Diagnosis", "Software fixes and tune-up", "Parts quoted separately"]
-          },
-          {
-            "id": "os-install",
-            "name": "Operating system install with drivers",
-            "price": 2000,
-            "unit": "per device",
-            "from": false,
-            "popular": false,
-            "addon": false,
-            "turnaround": "Same day",
-            "service": "troubleshooting",
-            "includes": ["Windows or Linux install", "Drivers and essential software", "Backup of your files first"]
-          },
-          {
-            "id": "malware",
-            "name": "Virus & malware removal",
-            "price": 1500,
-            "unit": "per device",
-            "from": false,
-            "popular": false,
-            "addon": false,
-            "turnaround": "Same day",
-            "service": "troubleshooting",
-            "includes": ["Scan and clean-up", "Endpoint protection setup"]
-          },
-          {
-            "id": "data-recovery",
-            "name": "Data recovery",
-            "price": 3000,
-            "unit": "per device",
-            "from": true,
-            "popular": false,
-            "addon": false,
-            "turnaround": "1–3 days",
-            "service": "troubleshooting",
-            "includes": ["Assessment of the drive", "Recovery from deleted, formatted or failing drives"]
-          },
-          {
-            "id": "network-setup",
-            "name": "Office network & Wi-Fi setup",
-            "price": 8000,
-            "unit": "labour",
-            "from": true,
-            "popular": false,
-            "addon": false,
-            "turnaround": "1–3 days",
-            "service": "it-support",
-            "includes": ["Router and access point setup", "Secure Wi-Fi and guest network", "Equipment billed at cost"]
-          },
-          {
-            "id": "it-plan",
-            "name": "Monthly IT support plan",
-            "price": 12000,
-            "unit": "per month",
-            "from": true,
-            "popular": true,
-            "addon": false,
-            "turnaround": "Ongoing",
-            "service": "ict-on-demand",
-            "includes": [
-              "Up to 10 devices",
-              "Monthly on-site check-up",
-              "Priority remote and on-site support",
-              "Backup and antivirus monitoring"
-            ]
-          },
-          {
-            "id": "workspace-setup",
-            "name": "Google Workspace / Microsoft 365 setup",
-            "price": 5000,
-            "unit": "one-off",
-            "from": true,
-            "popular": false,
-            "addon": false,
-            "turnaround": "1–2 days",
-            "service": "workspace",
-            "includes": [
-              "Organisation account setup",
-              "Staff email accounts",
-              "Shared drives, groups and permissions",
-              "Licences billed at cost"
-            ]
-          },
-          {
-            "id": "workspace-training",
-            "name": "Staff training: Google Workspace or Microsoft 365",
-            "price": 5000,
-            "unit": "per session (up to 15 people)",
-            "from": false,
-            "popular": false,
-            "addon": false,
-            "turnaround": "Book a date",
-            "service": "workspace",
-            "includes": [
-              "Email, calendar, Drive and Docs",
-              "Sharing and permissions",
-              "Hands-on practice with your own accounts"
-            ]
           }
         ]
       },
