@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>Page not found · Roy Nyamiaka</title>
+    <style>
+        body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #FAF8F4; color: #2B2723; font: 17px/1.6 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+        main { padding: 32px; max-width: 600px; }
+        .k { color: #3E6B52; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: 13px; }
+        h1 { font-size: clamp(2rem, 6vw, 3rem); line-height: 1.1; letter-spacing: -.02em; margin: 8px 0 12px; }
+        a { display: inline-block; margin: 10px 8px 0 0; padding: 11px 16px; border: 1px solid #948B80; border-radius: 8px; color: inherit; font-weight: 600; text-decoration: none; background: #fff; }
+        a.primary { background: #3E6B52; border-color: #3E6B52; color: #FFFFFF; }
+        a:focus-visible { outline: 2px solid #3E6B52; outline-offset: 3px; }
+        @media (prefers-color-scheme: dark) { body { background: #1A1815; color: #EEEAE3; } a { background: #26231F; border-color: #7C746A; } .k { color: #829E8C; } }
+    </style>
+</head>
+<body>
+<main>
+    <p class="k">Page not found</p>
+    <h1>This page does not exist</h1>
+    <p>The link may be old or mistyped.</p>
+    <a class="primary" id="home" href="https://ngareroy.github.io/roy-portfolio/">Go to the profile</a>
+    <a id="rates" href="https://ngareroy.github.io/roy-portfolio/#/rates">Rate card</a>
+    <a id="quote" href="https://ngareroy.github.io/roy-portfolio/#/quote">Get a quote</a>
+</main>
+<script>
+    (function () {
+        var base = "/roy-portfolio/";
+        if (!base) {
+            var parts = location.pathname.split('/').filter(Boolean);
+            base = /\.github\.io$/i.test(location.hostname) && parts.length > 1 ? '/' + parts[0] + '/' : '/';
+        }
+        document.getElementById('home').href = base;
+        document.getElementById('rates').href = base + '#/rates';
+        document.getElementById('quote').href = base + '#/quote';
+        var seg = location.pathname.slice(base.length).split('/').filter(Boolean)[0];
+        if (['services', 'projects', 'cv', 'rates', 'quote'].indexOf(seg) >= 0) location.replace(base + '#/' + seg);
+    })();
+</script>
+</body>
+</html>

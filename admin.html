@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Portfolio editor</title>
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="preload" href="assets/fonts/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+    <a class="skip" href="#ed-main">Skip to the form</a>
+    <header class="ed-top">
+        <a class="ed-brand" href="./" target="_blank" rel="noopener" title="Open the live site">
+            <span class="ed-brand__mark" id="ed-mark">RN</span>
+            <span><b>Portfolio editor</b><small id="ed-mode">Loading…</small></span>
+        </a>
+        <span class="ed-status" id="ed-status" role="status" aria-live="polite"></span>
+        <div class="ed-top__actions">
+            <button type="button" class="ed-btn ed-btn--ghost" data-act="toggle-preview" id="ed-preview-btn" aria-pressed="true">Preview</button>
+            <button type="button" class="ed-btn ed-btn--primary" data-act="go-publish" id="ed-save-btn">Save &amp; publish</button>
+        </div>
+    </header>
+    <div class="ed-shell" id="ed-shell">
+        <nav class="ed-nav" aria-label="Sections" id="ed-nav"></nav>
+        <main class="ed-main" id="ed-main" tabindex="-1">
+            <div class="ed-loading">Loading your content…</div>
+        </main>
+        <aside class="ed-preview" id="ed-preview" aria-label="Live preview">
+            <div class="ed-preview__bar">
+                <span>Live preview</span>
+                <span class="ed-preview__sizes" role="group" aria-label="Preview size">
+                    <button type="button" data-act="psize" data-size="desktop" aria-pressed="true">Desktop</button>
+                    <button type="button" data-act="psize" data-size="phone" aria-pressed="false">Phone</button>
+                </span>
+                <button type="button" class="ed-icon" data-act="toggle-preview" aria-label="Close preview">×</button>
+            </div>
+            <div class="ed-preview__frame" id="ed-frame-wrap">
+                <iframe id="ed-frame" title="Live preview of your site" src="about:blank"></iframe>
+            </div>
+        </aside>
+    </div>
+    <div class="ed-toast" id="ed-toast" role="status" aria-live="polite" hidden></div>
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/admin.js" defer></script>
+</body>
+</html>
