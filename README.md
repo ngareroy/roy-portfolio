@@ -38,6 +38,8 @@ Quote requests are emailed to **royngare@gmail.com** through [FormSubmit](https:
    - FormSubmit is sometimes slow. If the form says **“Still sending…”** or **“not confirmed”**, wait and check your inbox and spam (search `from:formsubmit`) before trying again. The request usually still arrives.
 3. Optional: after activating, FormSubmit gives you a random address that hides your real email. Paste it in **Editor → Settings → Send requests to this email**.
 
+If FormSubmit is slow or never sends the activation email, switch to Web3Forms (below). Your chosen service stays in place when the site is rebuilt.
+
 Prefer another service? In **Editor → Settings → Where quote requests go** you can switch to Web3Forms (free access key), Formspree, WhatsApp or the visitor’s email app. A **Send on WhatsApp instead** button is always on the form too.
 
 ## 3. Connect the editor (5 minutes, once)
