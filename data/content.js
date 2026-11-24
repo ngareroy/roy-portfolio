@@ -632,7 +632,7 @@ window.PORTFOLIO = {
       "skills": ["Web app development", "UI/UX design", "React", "Firebase"],
       "services": ["web-apps", "ux-testing"],
       "links": [
-        { "label": "Visit the live site", "url": "https://player-ratings-kohl.vercel.app" }
+        { "label": "Visit the live site", "url": "https://hubfc.vercel.app/" }
       ]
     },
     {
