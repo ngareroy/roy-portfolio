@@ -55,7 +55,7 @@ window.PORTFOLIO = {
     "email": "royngare@gmail.com",
     "phone": "+254 708 061 237",
     "whatsapp": "254708061237",
-    "photo": "assets/uploads/rooy-mwv8ix57.webp",
+    "photo": "",
     "cvPdf": "assets/docs/Royallans-Nyamiaka-CV.pdf",
     "availability": {
       "status": "available",
