@@ -738,11 +738,16 @@
     var story = [['The challenge', p.challenge], ['What I did', p.approach], ['Outcome', p.outcome]].filter(function (x) { return x[1]; });
     var feats = arr(p.features).filter(Boolean);
     var services = p.services.map(function (sid) { return byId(C.services, sid); }).filter(Boolean);
+    var liveLinks = p.links.filter(function (l) { return l && /^https?:\/\//.test(l.url || ''); });
     return '<article><header class="pagehead proj__head"><div class="wrap">' +
       '<a class="back" href="#/projects">' + icon('arrowLeft') + 'All projects</a>' +
       '<h1 class="pagehead__title">' + e(p.title) + '</h1>' +
       '<div class="proj__meta">' + statusBadge(p) + (p.client ? '<span class="proj__client">' + e(p.client) + '</span>' : '') + (p.period ? '<span class="mono muted">' + e(p.period) + '</span>' : '') + '</div>' +
-      '<p class="pagehead__lede" style="margin-top:18px">' + ef(p.summary) + '</p>' + media + '</div></header>' +
+      '<p class="pagehead__lede" style="margin-top:18px">' + ef(p.summary) + '</p>' +
+      // Live sites and demos as buttons under the summary, so they are easy to find.
+      (liveLinks.length ? '<div class="pagehead__bar proj__links">' + liveLinks.map(function (l, k) {
+        return '<a class="btn' + (k === 0 ? ' btn--primary' : '') + '" href="' + e(l.url) + '" target="_blank" rel="noopener">' + e(l.label || 'Open') + ' ' + icon('arrowUpRight') + '</a>';
+      }).join('') + '</div>' : '') + media + '</div></header>' +
       '<div class="wrap proj__grid"><div class="story">' +
       (feats.length ? '<section><h2>Scope</h2><ul class="ticks ticks--lg">' + feats.map(function (x) { return '<li>' + icon('check') + '<span>' + ef(x) + '</span></li>'; }).join('') + '</ul></section>' : '') +
       story.map(function (s) { return '<section><h2>' + s[0] + '</h2><p>' + ef(s[1]) + '</p></section>'; }).join('') + '</div>' +

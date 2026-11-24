@@ -41,12 +41,13 @@ window.PORTFOLIO = {
   "profile": {
     "name": "Roy Nyamiaka",
     "fullName": "Royallans Nyamiaka",
-    "title": "ICT Administrator & Web Systems Developer",
-    "headline": "I build websites and school systems, keep IT running for schools and businesses, and set teams up with AI.",
+    "title": "ICT Administrator, Web Developer & Graphic Designer",
+    "headline": "I build websites and school systems, design for print, keep IT running for schools and businesses, and set teams up with AI.",
     "intro": "Based in Malindi. On-site across Kilifi County, remote anywhere.",
     "summary": [
       "I'm a hands-on ICT professional with {years}+ years of experience keeping networks, servers, devices and users running. As ICT Administrator at The Learning Hub School in Malindi, I manage the school's IT infrastructure, user support, access control, backups and endpoint security. I developed the school management system the school uses, where teachers record and analyse results and parents view and track progress, and I'm now building a transport tracking app that links parents with the school's transport section.",
       "I also build and look after websites. I developed and maintain The Learning Hub School's website, and built the website for FRENA, a community organization, working with both to improve their SEO and business profiles. For FRENA I also set up and registered their domain, transferred their website and set up professional email. At the school I set up Google Workspace, created staff emails and trained staff to use it.",
+      "I am also a graphic designer: I have designed yearbook publications, posters, banners and a billboard for The Learning Hub School, using Canva and Adobe Photoshop. My web work brings together UI/UX design (Figma, Adobe XD, wireframing and prototyping), full-stack development (JavaScript, TypeScript, PHP, React, Next.js and Firebase) and a security-first approach that includes vulnerability assessment, penetration testing and security audits.",
       "Since 2020 I have worked remotely as a data analyst for CloudFactory, doing data, image and video analysis for AI and machine-learning projects. I hold a BSc in Computer Security and Forensics and an ISO/IEC 27001 Information Security Associate credential, so security and data protection are part of everything I build."
     ],
     "careerStart": "2020-01",
@@ -68,7 +69,7 @@ window.PORTFOLIO = {
     ],
     "socials": [
       { "label": "LinkedIn", "url": "" },
-      { "label": "GitHub", "url": "" },
+      { "label": "GitHub", "url": "https://github.com/ngareroy" },
       { "label": "X", "url": "" },
       { "label": "Facebook", "url": "" },
       { "label": "Instagram", "url": "" },
@@ -83,6 +84,7 @@ window.PORTFOLIO = {
     "focusAreas": [
       "Websites",
       "School systems",
+      "Graphic design",
       "SEO & business profiles",
       "Domains & email",
       "Google Workspace",
@@ -93,6 +95,9 @@ window.PORTFOLIO = {
     "highlights": [
       "Developed The Learning Hub School's management system: teachers record and analyse results, and parents view and track progress",
       "Building a transport tracking app that links parents with the school's transport section and tracks learners' journeys",
+      "Building a fees and records system for the school’s administration: invoices, payments, balances, statements and fee reminders",
+      "Designed yearbook publications, posters, banners and a billboard for The Learning Hub School",
+      "Built Player Ratings, a player rating and management platform for football academies",
       "Built and maintain the websites of FRENA and The Learning Hub School, including SEO, business profiles, domain and professional email",
       "Set up Google Workspace for The Learning Hub School and trained staff to use it",
       "{years} years of remote data, image and video analysis for AI/ML projects at CloudFactory",
@@ -221,6 +226,16 @@ window.PORTFOLIO = {
       ],
       "tags": ["QA", "Android", "iOS", "Cross-browser"],
       "skills": ["App & website testing (QA)", "Usability testing"]
+    },
+    {
+      "id": "graphic-design",
+      "group": "design-test",
+      "title": "Graphic design",
+      "summary": "Yearbooks, posters, banners and billboards, designed in Canva and Adobe Photoshop.",
+      "details": "",
+      "deliverables": ["Yearbook and publication design", "Posters", "Banners", "Billboards"],
+      "tags": ["Yearbooks", "Posters", "Banners", "Billboards", "Canva", "Photoshop"],
+      "skills": ["Graphic design", "Print & publication design", "Canva", "Adobe Photoshop"]
     },
     {
       "id": "it-support",
@@ -386,7 +401,10 @@ window.PORTFOLIO = {
         "Antivirus & endpoint protection",
         "ISO/IEC 27001 information security",
         "Data protection & confidentiality (Kenya DPA)",
-        "Digital forensics & data recovery"
+        "Digital forensics & data recovery",
+        "Vulnerability assessment",
+        "Penetration testing",
+        "Security audits"
       ]
     },
     {
@@ -404,9 +422,38 @@ window.PORTFOLIO = {
       ]
     },
     {
+      "id": "stack",
+      "title": "Languages & frameworks",
+      "items": [
+        "JavaScript",
+        "TypeScript",
+        "PHP",
+        "HTML & CSS",
+        "React",
+        "Next.js",
+        "Vite",
+        "Tailwind CSS",
+        "Firebase",
+        "Vercel",
+        "Git & GitHub"
+      ]
+    },
+    {
       "id": "design",
       "title": "Design & testing",
-      "items": ["UI/UX design", "Usability testing", "App & website testing (QA)"]
+      "items": [
+        "UI/UX design",
+        "Usability testing",
+        "App & website testing (QA)",
+        "Figma",
+        "Adobe XD",
+        "Wireframing & prototyping"
+      ]
+    },
+    {
+      "id": "graphic",
+      "title": "Graphic design",
+      "items": ["Graphic design", "Print & publication design", "Canva", "Adobe Photoshop"]
     },
     {
       "id": "data",
@@ -452,26 +499,84 @@ window.PORTFOLIO = {
       "statusNote": "In daily use",
       "category": "School systems",
       "featured": true,
-      "summary": "A school management system where teachers record and analyse results, and parents view and track their children's progress.",
+      "summary": "The school’s management system and report card portal: teachers enter and analyse marks, class admins produce report cards, and parents view their children’s results and progress.",
       "features": [
-        "Teachers record learners' results",
-        "Results analysis for teachers",
-        "Parents view and track progress"
+        "Marks entry for subject teachers, with a live class mean",
+        "AI-assisted subject and general comments for each learner",
+        "Learner profiles with attendance and personal and social skills",
+        "Printable report cards and marksheets (PDF, Word and batch download)",
+        "Curriculum tracking: schemes of work, weekly lesson plans and registers, with an approval workflow",
+        "Role-based staff access: Super Admin, Admin, Class Admin and Subject Teacher",
+        "Parent portal: each child’s results, progress trends and downloadable report cards",
+        "Report cards sent to parents by email or WhatsApp"
       ],
       "challenge": "",
       "approach": "",
       "outcome": "",
       "role": "Developer",
-      "stack": [],
+      "stack": [
+        "React",
+        "Vite",
+        "Tailwind CSS",
+        "Firebase",
+        "Vercel",
+        "Google Gemini API",
+        "Resend",
+        "WhatsApp Cloud API"
+      ],
       "skills": [
         "MIS development",
         "Database development & administration",
         "Web app development",
-        "Reporting & records management"
+        "Reporting & records management",
+        "React",
+        "Firebase",
+        "AI-assisted development"
       ],
       "services": ["school-systems"],
-      "links": [],
+      "links": [
+        { "label": "Try the demo", "url": "https://app.thelearninghub.co.ke/demo" }
+      ],
       "images": []
+    },
+    {
+      "challenge": "",
+      "approach": "",
+      "outcome": "",
+      "period": "",
+      "images": [],
+      "id": "school-fees-records",
+      "cover": "Fees & records",
+      "title": "Lhub Admin: School Fees & Records",
+      "client": "The Learning Hub School, Malindi",
+      "status": "ongoing",
+      "statusNote": "In development",
+      "category": "School systems",
+      "featured": true,
+      "summary": "A multi-user web platform for the school’s administration to manage fees and learner records, replacing the school’s Excel workbooks.",
+      "features": [
+        "Learner records, with duplicate checks",
+        "Invoices, including bulk invoicing",
+        "Payments, balances owing and cleared, and fee statements",
+        "Fee reminders to parents, one at a time or in bulk",
+        "Payment reconciliation and reports",
+        "Tracking of sponsored learners",
+        "Import from the school’s existing Excel records",
+        "User accounts with an audit log"
+      ],
+      "role": "Developer",
+      "stack": ["Next.js", "TypeScript", "Tailwind CSS", "Firebase", "Resend", "Vercel"],
+      "skills": [
+        "MIS development",
+        "Database development & administration",
+        "Web app development",
+        "Reporting & records management",
+        "Next.js",
+        "TypeScript",
+        "Firebase"
+      ],
+      "services": ["school-systems", "web-apps"],
+      "links": []
     },
     {
       "id": "school-transport-app",
@@ -494,6 +599,41 @@ window.PORTFOLIO = {
       "services": ["school-systems"],
       "links": [],
       "images": []
+    },
+    {
+      "challenge": "",
+      "approach": "",
+      "outcome": "",
+      "period": "",
+      "images": [],
+      "id": "player-ratings",
+      "cover": "Player Ratings",
+      "title": "Player Ratings",
+      "client": "For football academies and coaching staff",
+      "status": "completed",
+      "statusNote": "Live",
+      "category": "Web apps",
+      "featured": true,
+      "summary": "A FIFA-inspired player rating and management platform for football academies: a public portal for parents and learners, and an admin panel for coaches.",
+      "features": [
+        "Player cards with overall ratings and radar charts across six categories",
+        "Position-weighted ratings for 15 positions, including a goalkeeping module",
+        "Formation builder with Auto-Fill Best XI",
+        "Match centre: fixtures and per-player match stats",
+        "Attendance tracking and training notes",
+        "Assessment periods with a Biggest Improvers leaderboard",
+        "Scouting for trial players, with one-click conversion to the squad",
+        "Awards, player comparison, club news and public fixtures",
+        "Player self-assessments compared with coach ratings",
+        "Role-based access for head and assistant coaches"
+      ],
+      "role": "Design and development",
+      "stack": ["React", "Vite", "Firebase", "Vercel"],
+      "skills": ["Web app development", "UI/UX design", "React", "Firebase"],
+      "services": ["web-apps", "ux-testing"],
+      "links": [
+        { "label": "Visit the live site", "url": "https://player-ratings-kohl.vercel.app" }
+      ]
     },
     {
       "id": "frena-website",
@@ -530,7 +670,9 @@ window.PORTFOLIO = {
         "Website maintenance"
       ],
       "services": ["websites", "business-online", "domains"],
-      "links": [],
+      "links": [
+        { "label": "Visit the website", "url": "https://frenaorganization.org" }
+      ],
       "images": []
     },
     {
@@ -562,7 +704,9 @@ window.PORTFOLIO = {
         "Website maintenance"
       ],
       "services": ["websites", "business-online"],
-      "links": [],
+      "links": [
+        { "label": "Visit the website", "url": "https://thelearninghub.co.ke" }
+      ],
       "images": []
     },
     {
@@ -591,6 +735,28 @@ window.PORTFOLIO = {
       "services": ["workspace"],
       "links": [],
       "images": []
+    },
+    {
+      "challenge": "",
+      "approach": "",
+      "outcome": "",
+      "period": "",
+      "images": [],
+      "id": "learning-hub-graphic-design",
+      "cover": "Graphic design",
+      "title": "Graphic Design for The Learning Hub School",
+      "client": "The Learning Hub School, Malindi",
+      "status": "completed",
+      "statusNote": "",
+      "category": "Graphic design",
+      "featured": true,
+      "summary": "Designed print and display materials for the school: yearbook publications, posters, banners and a billboard.",
+      "features": ["Yearbook publications", "Posters", "Banners", "Billboard"],
+      "role": "Graphic designer",
+      "stack": ["Canva", "Adobe Photoshop"],
+      "skills": ["Graphic design", "Print & publication design", "Canva", "Adobe Photoshop"],
+      "services": ["graphic-design"],
+      "links": []
     }
   ],
   "experience": [
@@ -610,6 +776,7 @@ window.PORTFOLIO = {
         "Identify and implement practical digital solutions and automation that streamline workflows and improve efficiency.",
         "Train and support staff and learners in using digital tools; designed and deliver a digital-literacy course for users of varying ability.",
         "Developed, manage and maintain the school website, and worked with the school to improve its SEO and business profile.",
+        "Designed the school’s yearbook publications, posters, banners and billboard using Canva and Adobe Photoshop.",
         "Set up Google Workspace for the school, created staff email accounts and the working environment, and trained staff to use it.",
         "Building a transport tracking app that links parents with the school's transport section and tracks learners' journeys."
       ],
@@ -639,7 +806,11 @@ window.PORTFOLIO = {
         "SEO setup",
         "Business online profiles",
         "Website maintenance",
-        "Business email setup"
+        "Business email setup",
+        "Graphic design",
+        "Print & publication design",
+        "Canva",
+        "Adobe Photoshop"
       ]
     },
     {
