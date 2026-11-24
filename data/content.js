@@ -535,7 +535,7 @@ window.PORTFOLIO = {
       ],
       "services": ["web-apps", "school-systems", "ai-dev", "app-testing"],
       "links": [
-        { "label": "Try the demo Demo Code [SMS]", "url": "https://app.thelearninghub.co.ke/demo" }
+        { "label": "Demo Code: SMS", "url": "https://app.thelearninghub.co.ke/demo" }
       ],
       "images": []
     },
