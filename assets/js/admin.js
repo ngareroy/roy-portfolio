@@ -180,10 +180,11 @@
         { k: 'share.quote', t: 'textarea', rows: 3, label: 'Quote form' },
         { k: 'share.projects', t: 'textarea', rows: 3, label: 'Projects' }
       ] },
-    { id: 'settings', label: 'Settings', route: '#/', keys: ['settings.siteUrl', 'settings.accent', 'settings.defaultTheme', 'settings.form', 'settings.editor'],
+    { id: 'settings', label: 'Settings', route: '#/', keys: ['settings.siteUrl', 'settings.cvSiteUrl', 'settings.accent', 'settings.defaultTheme', 'settings.form', 'settings.editor'],
       lede: 'Site address, colours, where quote requests go and how this editor saves.',
       fields: [
         { k: 'settings.siteUrl', t: 'url', label: 'Your site address', help: 'e.g. https://roynyamiaka.netlify.app or https://yourname.github.io/portfolio/. Used for share links, QR codes and social previews.' },
+        { k: 'settings.cvSiteUrl', t: 'url', label: 'CV site address (for employers)', help: 'e.g. https://yourname.github.io/. The CV site shows your CV, skills and projects without prices; it reads its content from this site. Leave empty if you only have one site.' },
         { k: 'settings.accent', t: 'color', label: 'Accent colour', help: 'Text on and around the colour adjusts automatically to stay readable.' },
         { k: 'settings.defaultTheme', t: 'select', label: 'Default theme', options: [['auto', 'Follow the visitor’s device'], ['light', 'Light'], ['dark', 'Dark']] },
         { group: 'Quote form' },

@@ -10,6 +10,13 @@
   var $app, $hdr, $ftr, $mnav, $live;
   var PREVIEW = /[?&]preview=1\b/.test(location.search);
   var assets = {};
+  var CONTACT = '#/quote?type=job';
+  /* The employer (CV) site is the same app with RN_SITE.variant = 'employer', set by the build in its index.html:
+     no rates, prices or quote basket, and "Contact me" in place of "Get a quote". It reads its content (and
+     uploaded files) from the freelance site at RN_SITE.contentUrl, so editor changes show on both sites. */
+  var SITE = window.RN_SITE || {};
+  var EMPLOYER = SITE.variant === 'employer';
+  var remoteBase = '';   // set when the content came from SITE.contentUrl
 
   /* ---------- storage (never throws) ---------- */
   function mkStore(kind) {
@@ -106,7 +113,12 @@
   var e = RN.esc;
   function f(t) { return RN.fill(t, C); }
   function ef(t) { return e(f(t)); }
-  function asset(p) { return assets[p] || p; }
+  function asset(p) {
+    if (assets[p]) return assets[p];
+    // Files uploaded in the editor live on the freelance site; the CV site links to them there.
+    if (remoteBase && /^assets\/(uploads|docs)\//.test(p)) return remoteBase + p;
+    return p;
+  }
   function arr(v) { return Array.isArray(v) ? v : (v ? [v] : []); }
   function byId(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
   function digits(s) { return String(s || '').replace(/\D/g, ''); }
@@ -183,18 +195,29 @@
     var ids = RN.rateChoices(c).map(function (x) { return x.id; });
     state.basket = arr(state.basket).filter(function (b) { return b && ids.indexOf(b.id) >= 0; });
   }
-  function loadContent() {
-    if (window.PORTFOLIO) return Promise.resolve(window.PORTFOLIO);
+  function loadScript(src) {
     return new Promise(function (res, rej) {
       var s = document.createElement('script');
-      s.src = 'data/content.js?v=' + Math.floor(Date.now() / 60000);
+      s.src = src + '?v=' + Math.floor(Date.now() / 60000);
       s.onload = function () {
         if (window.PORTFOLIO) res(window.PORTFOLIO);
-        else rej(new Error('data/content.js loaded, but it has a syntax error, so window.PORTFOLIO was not set.'));
+        else rej(new Error(src + ' loaded, but it has a syntax error, so window.PORTFOLIO was not set.'));
       };
-      s.onerror = function () { rej(new Error('Could not load data/content.js.')); };
+      s.onerror = function () { rej(new Error('Could not load ' + src + '.')); };
       document.head.appendChild(s);
     });
+  }
+  function loadContent() {
+    if (window.PORTFOLIO) return Promise.resolve(window.PORTFOLIO);
+    // The CV site prefers the freelance site's live content (kept current by the editor); its own copy is the fallback.
+    if (SITE.contentUrl && location.protocol !== 'file:') {
+      var base = RN.normBase(SITE.contentUrl);
+      return loadScript(base + 'data/content.js').then(function (c) { remoteBase = base; return c; }, function () {
+        window.PORTFOLIO = undefined;
+        return loadScript('data/content.js');
+      });
+    }
+    return loadScript('data/content.js');
   }
 
   /* ---------- theme & accent ---------- */
@@ -233,7 +256,7 @@
 
   /* ---------- links to pages ---------- */
   function baseUrl() {
-    var b = RN.normBase(C.settings.siteUrl);
+    var b = RN.normBase(EMPLOYER ? C.settings.cvSiteUrl : C.settings.siteUrl);
     if (b) return b;
     if (location.protocol === 'file:' || PREVIEW) return '';
     return location.origin + location.pathname.replace(/[^/]*$/, '');
@@ -287,7 +310,7 @@
   }
   function renderBasketBar() {
     var r = parse();
-    var show = state.basket.length && (r.name === 'rates' || r.name === 'services' || r.name === 'home');
+    var show = !EMPLOYER && state.basket.length && (r.name === 'rates' || r.name === 'services' || r.name === 'home');
     var bar = document.getElementById('basketbar');
     document.body.classList.toggle('has-basketbar', !!show);
     if (!show) { if (bar) bar.remove(); return; }
@@ -345,8 +368,8 @@
     else if (r.name === 'projects' && r.id) { var pr = byId(C.projects, r.id); t = (pr ? pr.title : 'Project') + ' · ' + p.name; }
     else if (r.name === 'projects') t = 'Projects · ' + p.name;
     else if (r.name === 'cv') t = (p.fullName || p.name) + ' · CV';
-    else if (r.name === 'rates') t = 'Rate card · ' + p.name;
-    else if (r.name === 'quote') t = 'Request a quote · ' + p.name;
+    else if (r.name === 'rates') t = (EMPLOYER ? 'Freelance rates · ' : 'Rate card · ') + p.name;
+    else if (r.name === 'quote') t = (EMPLOYER ? 'Contact · ' : 'Request a quote · ') + p.name;
     else t = 'Page not found · ' + p.name;
     document.title = t;
   }
@@ -409,6 +432,8 @@
 
   /* ----- home ----- */
   VIEWS.home = function () {
+    // The CV site leads with the CV: summary, experience and skills, then projects and what I do.
+    if (EMPLOYER) return hero() + facts() + about() + experienceHome() + skillsSection() + projectsHome() + educationHome() + servicesHome() + testimonials() + ctaBand();
     return hero() + facts() + about() + servicesHome() + projectsHome() + skillsSection() +
       experienceHome() + ratesTeaser() + testimonials() + ctaBand();
   };
@@ -429,9 +454,13 @@
       '<p class="hero__lede">' + ef(p.headline) + '</p>' +
       ((p.intro || p.location) ? '<p class="hero__sub">' + icon('pin') + '<span>' + ef(p.intro || p.location) + '</span></p>' : '') +
       '<div class="hero__ctas">' +
-      '<a class="btn btn--primary" href="#/quote">Get a quote ' + icon('arrowRight') + '</a>' +
-      '<a class="btn" href="#/cv">View CV</a>' +
-      '<a class="btn" href="#/rates">Rate card</a>' +
+      (EMPLOYER
+        ? '<a class="btn btn--primary" href="#/cv">View full CV ' + icon('arrowRight') + '</a>' +
+          (p.cvPdf ? '<a class="btn" href="' + e(asset(p.cvPdf)) + '" download>' + icon('download') + 'Download CV (PDF)</a>' : '') +
+          '<a class="btn" href="' + CONTACT + '">Contact me</a>'
+        : '<a class="btn btn--primary" href="#/quote">Get a quote ' + icon('arrowRight') + '</a>' +
+          '<a class="btn" href="#/cv">View CV</a>' +
+          '<a class="btn" href="#/rates">Rate card</a>') +
       '</div>' +
       (p.focusAreas.length ? '<ul class="chips hero__focus" aria-label="Focus areas">' + p.focusAreas.map(function (w) { return '<li class="chip">' + e(w) + '</li>'; }).join('') + '</ul>' : '') +
       '</div>' +
@@ -469,7 +498,7 @@
       return '<div class="svc__group"><div><h3 class="svc__gtitle">' + e(g.title) + '</h3>' + (g.blurb ? '<p class="svc__gblurb">' + ef(g.blurb) + '</p>' : '') + '</div>' +
         '<ul class="svc__list">' + list.map(function (s) {
           n += 1;
-          var from = RN.serviceFromPrice(C, s.id);
+          var from = EMPLOYER ? null : RN.serviceFromPrice(C, s.id);
           return '<li><a class="svc__row" href="#/services/' + encodeURIComponent(s.id) + '">' +
             '<span class="svc__num">' + (n < 10 ? '0' : '') + n + '</span>' +
             '<span class="svc__name">' + e(s.title) + '</span>' +
@@ -479,8 +508,8 @@
         }).join('') + '</ul></div>';
     }).join('');
     return '<section class="sec sec--alt" id="services" aria-labelledby="svc-h"><div class="wrap">' +
-      '<header class="sec__head sec__head--split"><div>' + eyebrow('Services') + '<h2 class="sec__title" id="svc-h">What I can help with</h2></div>' +
-      '<a class="link-arrow" href="#/services">Service details ' + icon('arrowRight') + '</a></header>' + body + '</div></section>';
+      '<header class="sec__head sec__head--split"><div>' + eyebrow(EMPLOYER ? 'What I do' : 'Services') + '<h2 class="sec__title" id="svc-h">' + (EMPLOYER ? 'Areas I work in' : 'What I can help with') + '</h2></div>' +
+      '<a class="link-arrow" href="#/services">' + (EMPLOYER ? 'More detail' : 'Service details') + ' ' + icon('arrowRight') + '</a></header>' + body + '</div></section>';
   }
   function projectsHome() {
     if (!C.projects.length) return '';
@@ -541,6 +570,21 @@
     if (!sel.experience.length && !sel.projects.length && !sel.services.length) html += '<p class="skx__hint">Ask me about this one; details coming soon.</p>';
     return html;
   }
+  /* CV site only: education and certifications on the home page. */
+  function educationHome() {
+    if (!C.education.length && !C.certifications.length) return '';
+    var edu = C.education.length ? '<div><h3 class="mini-h">Education</h3><div class="edu">' + C.education.map(function (x) {
+      return '<div><h4>' + e(x.qualification) + '</h4><p>' + e([x.grade, x.institution, x.period].filter(Boolean).join(' · ')) + '</p></div>';
+    }).join('') + '</div></div>' : '';
+    var certs = C.certifications.length ? '<div><h3 class="mini-h">Certifications</h3><ul class="certs">' + C.certifications.map(function (x) {
+      var name = x.url ? '<a href="' + e(x.url) + '" target="_blank" rel="noopener">' + e(x.name) + '</a>' : e(x.name);
+      return '<li><div><b>' + name + '</b><br><span>' + e(x.issuer || '') + '</span></div><time>' + e(x.year || '') + '</time></li>';
+    }).join('') + '</ul></div>' : '';
+    return '<section class="sec" id="education" aria-labelledby="ed-h"><div class="wrap">' +
+      '<header class="sec__head sec__head--split"><div>' + eyebrow('Education') + '<h2 class="sec__title" id="ed-h">Qualifications</h2></div>' +
+      '<a class="link-arrow" href="#/cv">Full CV ' + icon('arrowRight') + '</a></header>' +
+      '<div class="edu-home">' + edu + certs + '</div></div></section>';
+  }
   function experienceHome() {
     if (!C.experience.length) return '';
     return '<section class="sec" id="experience" aria-labelledby="ex-h"><div class="wrap">' +
@@ -585,6 +629,15 @@
   }
   function ctaBand() {
     var p = C.profile;
+    if (EMPLOYER) {
+      return '<section class="cta" aria-labelledby="cta-h"><div class="wrap"><div class="cta__panel">' +
+        '<div><h2 class="cta__title" id="cta-h">Hiring for an ICT or web role?</h2>' +
+        '<p class="cta__lede">Send me a message about the role, or download my CV.</p></div>' +
+        '<div class="cta__actions"><a class="btn btn--primary" href="' + CONTACT + '">Invite me to interview ' + icon('arrowRight') + '</a>' +
+        (p.cvPdf ? '<a class="btn" href="' + e(asset(p.cvPdf)) + '" download>' + icon('download') + 'CV (PDF)</a>' : '') +
+        (p.email ? '<a class="btn" href="' + e(mailLink('Hello ' + RN.firstName(p.name))) + '">' + icon('mail') + 'Email</a>' : '') +
+        '</div></div></div></section>';
+    }
     return '<section class="cta" aria-labelledby="cta-h"><div class="wrap"><div class="cta__panel">' +
       '<div><h2 class="cta__title" id="cta-h">Have a project or an IT problem?</h2>' +
       '<p class="cta__lede">Tell me what you need. I will reply with questions or a clear quote.</p></div>' +
@@ -606,14 +659,16 @@
         '<div class="svcd__list">' + list.map(function (s) { n += 1; return serviceItem(s, n, r.id === s.id); }).join('') + '</div></section>';
     }).join('');
     return '<section class="pagehead pagehead--accent"><div class="wrap">' +
-      '<p class="eyebrow">Services</p><h1 class="pagehead__title">What I do</h1>' +
-      '<p class="pagehead__lede">' + C.services.length + ' services across building, testing, support and growth. Each one links to its starting price and a quote request.</p>' +
+      '<p class="eyebrow">' + (EMPLOYER ? 'Skills in practice' : 'Services') + '</p><h1 class="pagehead__title">What I do</h1>' +
+      '<p class="pagehead__lede">' + (EMPLOYER
+        ? C.services.length + ' areas across building, testing, support and growth, with the work that shows each one.'
+        : C.services.length + ' services across building, testing, support and growth. Each one links to its starting price and a quote request.') + '</p>' +
       '<nav class="jump" aria-label="Service groups">' + groups.map(function (g) { return g.id ? '<a class="chip" href="#/services" data-action="scrollto" data-target="g-' + e(g.id) + '">' + e(g.title) + '</a>' : ''; }).join('') +
-      '<a class="chip" href="#/rates">Rate card ' + icon('arrowRight') + '</a></nav></div></section>' +
+      (EMPLOYER ? '' : '<a class="chip" href="#/rates">Rate card ' + icon('arrowRight') + '</a>') + '</nav></div></section>' +
       '<div class="wrap">' + body + '</div>' + ctaBand();
   };
   function serviceItem(s, n, target) {
-    var from = RN.serviceFromPrice(C, s.id);
+    var from = EMPLOYER ? null : RN.serviceFromPrice(C, s.id);
     var rel = C.projects.filter(function (p) { return p.services.indexOf(s.id) >= 0; });
     var cat = null;
     C.rates.categories.forEach(function (c) { if (!cat && c.items.some(function (it) { return it.service === s.id; })) cat = c.id; });
@@ -623,12 +678,12 @@
       '<p class="svcd__sum">' + ef(s.summary) + '</p>' +
       (s.details ? '<p class="svcd__details">' + ef(s.details) + '</p>' : '') +
       '<div class="svcd__cols">' +
-      (s.deliverables.length ? '<div><p class="mini-h">What you get</p><ul class="ticks">' + s.deliverables.map(function (d) { return '<li>' + icon('check') + '<span>' + ef(d) + '</span></li>'; }).join('') + '</ul></div>' : '') +
+      (s.deliverables.length ? '<div><p class="mini-h">' + (EMPLOYER ? 'What it covers' : 'What you get') + '</p><ul class="ticks">' + s.deliverables.map(function (d) { return '<li>' + icon('check') + '<span>' + ef(d) + '</span></li>'; }).join('') + '</ul></div>' : '') +
       '<div>' + (rel.length ? '<p class="mini-h">Related work</p><ul class="rel">' + rel.map(function (p) { return '<li><a href="#/projects/' + encodeURIComponent(p.id) + '">' + e(p.title) + '</a></li>'; }).join('') + '</ul>' : '') +
       (s.tags.length ? '<p class="mini-h" style="margin-top:' + (rel.length ? '18px' : '0') + '">Keywords</p><ul class="chips">' + s.tags.map(function (t) { return '<li class="chip">' + e(t) + '</li>'; }).join('') + '</ul>' : '') + '</div>' +
       '</div>' +
-      '<div class="svcd__foot"><a class="btn btn--primary btn--sm" href="#/quote?service=' + encodeURIComponent(s.id) + '">Request a quote ' + icon('arrowRight') + '</a>' +
-      (cat ? '<a class="btn btn--sm" href="#/rates?c=' + encodeURIComponent(cat) + '">See prices</a>' : '') + '</div></article>';
+      (EMPLOYER ? '' : '<div class="svcd__foot"><a class="btn btn--primary btn--sm" href="#/quote?service=' + encodeURIComponent(s.id) + '">Request a quote ' + icon('arrowRight') + '</a>' +
+      (cat ? '<a class="btn btn--sm" href="#/rates?c=' + encodeURIComponent(cat) + '">See prices</a>' : '') + '</div>') + '</article>';
   }
 
   /* ----- projects ----- */
@@ -698,7 +753,9 @@
       (p.stack.length ? '<div><dt>Tools & methods</dt><dd><ul class="chips">' + p.stack.map(function (s) { return '<li class="chip">' + e(s) + '</li>'; }).join('') + '</ul></dd></div>' : '') +
       (services.length ? '<div><dt>Related services</dt><dd><ul class="rel">' + services.map(function (s) { return '<li><a href="#/services/' + encodeURIComponent(s.id) + '">' + e(s.title) + '</a></li>'; }).join('') + '</ul></dd></div>' : '') +
       (p.links.filter(function (l) { return l && l.url; }).length ? '<div><dt>Links</dt><dd><ul class="rel">' + p.links.filter(function (l) { return l && l.url; }).map(function (l) { return '<li><a href="' + e(l.url) + '" target="_blank" rel="noopener">' + e(l.label || l.url) + ' ' + icon('external') + '</a></li>'; }).join('') + '</ul></dd></div>' : '') +
-      '</dl><a class="btn btn--primary btn--block" href="#/quote' + (services[0] ? '?service=' + encodeURIComponent(services[0].id) : '') + '">Need something similar? ' + icon('arrowRight') + '</a></aside></div>' +
+      '</dl>' + (EMPLOYER
+        ? '<a class="btn btn--primary btn--block" href="' + CONTACT + '">Contact me ' + icon('arrowRight') + '</a>'
+        : '<a class="btn btn--primary btn--block" href="#/quote' + (services[0] ? '?service=' + encodeURIComponent(services[0].id) : '') + '">Need something similar? ' + icon('arrowRight') + '</a>') + '</aside></div>' +
       (C.projects.length > 1 ? '<nav class="wrap pager" aria-label="More projects"><a href="#/projects/' + encodeURIComponent(prev.id) + '"><small>Previous</small><b>' + e(prev.title) + '</b></a>' +
         '<a href="#/projects/' + encodeURIComponent(next.id) + '"><small>Next</small><b>' + e(next.title) + '</b></a></nav>' : '') +
       '<div style="height:var(--sec)"></div></article>';
@@ -823,6 +880,14 @@
 
   /* ----- rates ----- */
   VIEWS.rates = function () {
+    if (EMPLOYER) {
+      // Old links from when this address forwarded to the freelance site (e.g. /#/rates) land here.
+      var fl = freelanceUrl();
+      return '<section class="nf"><div class="wrap"><p class="eyebrow">Freelance services</p><h1 class="pagehead__title pagehead__title--md">Rates are on my freelance site</h1>' +
+        '<p class="pagehead__lede">This site is my CV. Prices, packages and quote requests are on my freelance site.</p>' +
+        '<div class="pagehead__bar">' + (fl ? '<a class="btn btn--primary" href="' + e(fl + '#/rates') + '">Open the rate card ' + icon('arrowUpRight') + '</a>' : '') +
+        '<a class="btn" href="#/cv">View CV</a></div></div></section>';
+    }
     var cur = C.settings.currency || {};
     var cats = C.rates.categories;
     return '<section class="pagehead pagehead--accent"><div class="wrap">' +
@@ -906,6 +971,7 @@
     job: { label: 'Job or interview invitation', msg: 'About the role', ph: 'Role, responsibilities, location or remote, and how you would like to proceed.' },
     question: { label: 'General question', msg: 'Your message', ph: 'How can I help?' }
   };
+  if (EMPLOYER) delete TYPES.quote; // the CV site has no quotes: job invitations and questions only
   var BUDGETS = ['Not sure yet', 'Under KES 10,000', 'KES 10,000 – 30,000', 'KES 30,000 – 80,000', 'KES 80,000 – 150,000', 'Over KES 150,000'];
   var TIMELINES = ['Flexible', 'As soon as possible', 'Within 2 weeks', 'Within a month', 'In 1–3 months'];
   var LOCATIONS = ['Remote / online', 'On-site in Malindi', 'On-site elsewhere in Kilifi County', 'Elsewhere in Kenya', 'Outside Kenya'];
@@ -916,13 +982,13 @@
     var changed = false;
     var t = q.get('type');
     if (t && TYPES[t] && state.enquiry !== t) { state.enquiry = t; changed = true; }
-    var s = q.get('service');
+    var s = EMPLOYER ? null : q.get('service');
     if (s && byId(C.services, s)) {
       state.enquiry = 'quote';
       var list = arr(state.form.services);
       if (list.indexOf(s) < 0) { list.push(s); state.form.services = list; changed = true; }
     }
-    var item = q.get('item');
+    var item = EMPLOYER ? null : q.get('item');
     if (item && !inBasket(item) && byId(RN.rateChoices(C), item)) { state.basket.push({ id: item, qty: 1 }); saveBasket(); }
     if (changed || s || t) { state.sent = null; saveForm(); }
   }
@@ -930,18 +996,23 @@
 
   VIEWS.quote = function () {
     var p = C.profile;
-    return '<section class="pagehead"><div class="wrap"><p class="eyebrow">Quote request</p><h1 class="pagehead__title">Get a quote</h1>' +
-      '<p class="pagehead__lede">Tell me what you need. I will reply with questions or a clear, fixed quote.</p></div></section>' +
+    if (EMPLOYER && !TYPES[state.enquiry]) state.enquiry = 'job';
+    var head = EMPLOYER
+      ? '<p class="eyebrow">Contact</p><h1 class="pagehead__title">Contact me</h1><p class="pagehead__lede">Invite me to an interview, ask about a role, or send a question.</p>'
+      : '<p class="eyebrow">Quote request</p><h1 class="pagehead__title">Get a quote</h1><p class="pagehead__lede">Tell me what you need. I will reply with questions or a clear, fixed quote.</p>';
+    var next = EMPLOYER
+      ? '<div class="qcard"><h2>What happens next</h2><ol class="steps"><li>I read your message.</li><li>I reply the way you prefer: email, WhatsApp or a call.</li></ol></div>'
+      : '<div class="qcard"><h2>What happens next</h2><ol class="steps"><li>I read your request and check anything unclear with you.</li><li>You get a fixed quote and a timeline.</li><li>Work starts once you approve it.</li></ol></div>' +
+        '<div class="qcard"><h2>Not sure what to ask for?</h2><p>Browse starting prices and add items to your quote.</p><a class="link-arrow" href="#/rates">Open the rate card ' + icon('arrowRight') + '</a></div>';
+    return '<section class="pagehead"><div class="wrap">' + head + '</div></section>' +
       '<div class="wrap quote"><div id="qform-wrap">' + quoteMain() + '</div>' +
       '<aside class="qside" aria-label="Other ways to reach me">' +
       '<div class="qcard qcard--accent"><h2>Prefer to talk?</h2><div class="qactions">' +
       ((p.whatsapp || p.phone) ? '<a class="btn btn--sm" href="' + e(waLink('Hi ' + RN.firstName(p.name) + ', ')) + '" target="_blank" rel="noopener">' + icon('chat') + 'WhatsApp</a>' : '') +
       (p.phone ? '<a class="btn btn--sm" href="' + e(telLink()) + '">' + icon('phone') + 'Call</a>' : '') +
-      (p.email ? '<a class="btn btn--sm" href="' + e(mailLink('Quote request')) + '">' + icon('mail') + 'Email</a>' : '') +
+      (p.email ? '<a class="btn btn--sm" href="' + e(mailLink(EMPLOYER ? 'About a role' : 'Quote request')) + '">' + icon('mail') + 'Email</a>' : '') +
       '</div><p style="margin-top:14px;font-weight:600">' + e(p.phone || '') + (p.phone && p.email ? '<br>' : '') + e(p.email || '') + '</p></div>' +
-      '<div class="qcard"><h2>What happens next</h2><ol class="steps"><li>I read your request and check anything unclear with you.</li><li>You get a fixed quote and a timeline.</li><li>Work starts once you approve it.</li></ol></div>' +
-      '<div class="qcard"><h2>Not sure what to ask for?</h2><p>Browse starting prices and add items to your quote.</p><a class="link-arrow" href="#/rates">Open the rate card ' + icon('arrowRight') + '</a></div>' +
-      '</aside></div>';
+      next + '</aside></div>';
   };
   function quoteMain() {
     if (state.sent) return quoteDone();
@@ -1197,7 +1268,7 @@
       clearTimeout(slowTimer);
       state.sending = false;
       state.sent = { ref: d.reference, name: d.name, method: d.contact_method, text: payloadText(d), demo: !!res.demo, handoff: res.handoff || '' };
-      if (d.enquiry_type === TYPES.quote.label) { state.basket = []; saveBasket(); }
+      if (TYPES.quote && d.enquiry_type === TYPES.quote.label) { state.basket = []; saveBasket(); }
       state.form = { contact_method: state.form.contact_method };
       state.tried = false;
       saveForm();
@@ -1251,7 +1322,8 @@
   function vNotFound(msg) {
     return '<section class="nf"><div class="wrap"><p class="eyebrow">Error 404</p><h1 class="pagehead__title">404</h1>' +
       '<p class="pagehead__lede">' + e(msg || 'This page does not exist. The link may be old or mistyped.') + '</p>' +
-      '<div class="pagehead__bar"><a class="btn btn--primary" href="#/">Go to the profile</a><a class="btn" href="#/rates">Rate card</a><a class="btn" href="#/quote">Get a quote</a></div></div></section>';
+      '<div class="pagehead__bar"><a class="btn btn--primary" href="#/">Go to the profile</a>' +
+      (EMPLOYER ? '<a class="btn" href="#/cv">View CV</a><a class="btn" href="' + CONTACT + '">Contact me</a>' : '<a class="btn" href="#/rates">Rate card</a><a class="btn" href="#/quote">Get a quote</a>') + '</div></div></section>';
   }
   function vError(err) {
     return '<section class="nf"><div class="wrap"><p class="eyebrow">Something broke</p><h1 class="pagehead__title" style="font-size:clamp(3rem,10vw,7rem)">Oops</h1>' +
@@ -1261,7 +1333,18 @@
   /* =========================================================
      CHROME: header, mobile menu, footer
      ========================================================= */
-  var NAV = [['home', 'Profile', '#/'], ['services', 'Services', '#/services'], ['projects', 'Projects', '#/projects'], ['cv', 'CV', '#/cv'], ['rates', 'Rates', '#/rates']];
+  var NAV = EMPLOYER
+    ? [['home', 'Profile', '#/'], ['cv', 'CV', '#/cv'], ['projects', 'Projects', '#/projects'], ['services', 'What I do', '#/services']]
+    : [['home', 'Profile', '#/'], ['services', 'Services', '#/services'], ['projects', 'Projects', '#/projects'], ['cv', 'CV', '#/cv'], ['rates', 'Rates', '#/rates']];
+  var NAV_CTA = EMPLOYER ? ['quote', 'Contact me', CONTACT] : ['quote', 'Get a quote', '#/quote'];
+  function freelanceUrl() { return RN.normBase(C.settings.siteUrl); }
+  function cvSiteUrl() { return RN.normBase(C.settings.cvSiteUrl); }
+  /* A quiet link between the two sites, in the footer. */
+  function crossLink() {
+    var u = EMPLOYER ? freelanceUrl() : cvSiteUrl();
+    if (!u || (PREVIEW && !EMPLOYER)) return '';
+    return '<a class="ftr__cross" href="' + e(u) + '">' + (EMPLOYER ? 'Freelance services and rates' : 'CV for employers') + ' ' + icon('arrowUpRight') + '</a>';
+  }
   function renderChrome() {
     var p = C.profile;
     $hdr.innerHTML = '<div class="wrap hdr__in">' +
@@ -1270,12 +1353,14 @@
       '<div class="hdr__actions">' +
       '<button type="button" class="iconbtn hdr__share" data-action="share" aria-label="Share this site">' + icon('share') + '</button>' +
       '<button type="button" class="iconbtn" data-action="theme" aria-label="Switch theme">' + icon('moon') + '</button>' +
-      '<a class="btn btn--primary btn--sm hdr__quote" href="#/quote" data-nav="quote"><span class="hdr__quote-label">Get a quote</span><span class="hdr__quote-short">Quote</span><span class="count" data-basket-count hidden></span></a>' +
+      (EMPLOYER
+        ? '<a class="btn btn--primary btn--sm hdr__quote" href="' + CONTACT + '" data-nav="quote"><span class="hdr__quote-label">Contact me</span><span class="hdr__quote-short">Contact</span></a>'
+        : '<a class="btn btn--primary btn--sm hdr__quote" href="#/quote" data-nav="quote"><span class="hdr__quote-label">Get a quote</span><span class="hdr__quote-short">Quote</span><span class="count" data-basket-count hidden></span></a>') +
       '<button type="button" class="iconbtn hdr__menu" data-action="menu" aria-expanded="false" aria-controls="mnav" aria-label="Open menu">' + icon('menu') + '</button>' +
       '</div></div>';
     $mnav.innerHTML = '<div class="mnav__top"><span class="brand"><span class="brand__mark" aria-hidden="true">' + e(RN.initials(p.name)) + '</span><span class="brand__name">' + e(p.name) + '</span></span>' +
       '<button type="button" class="iconbtn" data-action="menu-close" aria-label="Close menu">' + icon('x') + '</button></div>' +
-      '<nav class="mnav__links" aria-label="Main">' + NAV.concat([['quote', 'Get a quote', '#/quote']]).map(function (n, i) {
+      '<nav class="mnav__links" aria-label="Main">' + NAV.concat([NAV_CTA]).map(function (n, i) {
         return '<a href="' + n[2] + '" data-nav="' + n[0] + '"><span>0' + (i + 1) + '</span>' + n[1] + '</a>';
       }).join('') + '</nav>' +
       '<div class="mnav__actions"><button type="button" class="btn" data-action="share">' + icon('share') + 'Share</button>' +
@@ -1286,16 +1371,19 @@
     $ftr.innerHTML = '<div class="wrap"><div class="ftr__grid">' +
       '<div><p class="ftr__name">' + e(p.name) + '</p><p class="ftr__muted">' + e(p.title || '') + (p.location ? '<br>' + e(p.location) : '') + '</p>' +
       '<p style="margin-top:20px"><button type="button" class="btn btn--sm" data-action="share" data-page="profile">' + icon('share') + 'Share this profile</button></p></div>' +
-      '<div><p class="ftr__h">Explore</p><ul class="ftr__links">' + NAV.concat([['quote', 'Get a quote', '#/quote']]).map(function (n) { return '<li><a href="' + n[2] + '">' + n[1] + '</a></li>'; }).join('') + '</ul></div>' +
+      '<div><p class="ftr__h">Explore</p><ul class="ftr__links">' + NAV.concat([NAV_CTA]).map(function (n) { return '<li><a href="' + n[2] + '">' + n[1] + '</a></li>'; }).join('') + '</ul></div>' +
       '<div><p class="ftr__h">Contact</p><ul class="ftr__links">' +
       ((p.whatsapp || p.phone) ? '<li><a href="' + e(waLink('Hi ' + RN.firstName(p.name) + ', ')) + '" target="_blank" rel="noopener">' + icon('chat') + 'WhatsApp</a></li>' : '') +
       (p.phone ? '<li><a href="' + e(telLink()) + '">' + icon('phone') + e(p.phone) + '</a></li>' : '') +
       (p.email ? '<li><a href="mailto:' + e(p.email) + '">' + icon('mail') + e(p.email) + '</a></li>' : '') + '</ul></div>' +
       '<div><p class="ftr__h">' + (socials.length ? 'Elsewhere' : 'Quick links') + '</p><ul class="ftr__links">' +
       (socials.length ? socials.map(function (s) { return '<li><a href="' + e(s.url) + '" target="_blank" rel="noopener me">' + icon('link') + e(s.label || s.url) + '</a></li>'; }).join('') :
-        '<li><a href="#/cv">' + icon('user') + 'CV</a></li><li><a href="#/rates">' + icon('tag') + 'Rate card</a></li><li><button type="button" class="btn btn--sm" data-action="share" data-page="quote" style="margin-top:6px">' + icon('qr') + 'QR code</button></li>') +
+        (EMPLOYER
+          ? '<li><a href="#/cv">' + icon('user') + 'CV</a></li>' + (p.cvPdf ? '<li><a href="' + e(asset(p.cvPdf)) + '" download>' + icon('download') + 'CV (PDF)</a></li>' : '') +
+            '<li><button type="button" class="btn btn--sm" data-action="share" data-page="profile" style="margin-top:6px">' + icon('qr') + 'QR code</button></li>'
+          : '<li><a href="#/cv">' + icon('user') + 'CV</a></li><li><a href="#/rates">' + icon('tag') + 'Rate card</a></li><li><button type="button" class="btn btn--sm" data-action="share" data-page="quote" style="margin-top:6px">' + icon('qr') + 'QR code</button></li>')) +
       '</ul></div></div>' +
-      '<div class="ftr__base"><span>© ' + year + ' ' + e(p.fullName || p.name) + '</span><span>' + (C.meta.updated ? 'Updated ' + e(dateLabel(C.meta.updated)) : '') + '</span></div></div>';
+      '<div class="ftr__base"><span>© ' + year + ' ' + e(p.fullName || p.name) + '</span>' + crossLink() + '<span>' + (C.meta.updated ? 'Updated ' + e(dateLabel(C.meta.updated)) : '') + '</span></div></div>';
     applyTheme();
     updateBasketUI();
   }
@@ -1324,9 +1412,11 @@
   /* =========================================================
      SHARE DIALOG
      ========================================================= */
-  var SHARE_KEYS = [['profile', 'Full profile'], ['cv', 'CV'], ['rates', 'Rate card'], ['quote', 'Quote form'], ['projects', 'Projects']];
+  var SHARE_KEYS = EMPLOYER
+    ? [['profile', 'Full profile'], ['cv', 'CV'], ['projects', 'Projects']]
+    : [['profile', 'Full profile'], ['cv', 'CV'], ['rates', 'Rate card'], ['quote', 'Quote form'], ['projects', 'Projects']];
   function openShare(key) {
-    state.shareKey = key && RN.PAGES[key] ? key : 'profile';
+    state.shareKey = key && RN.PAGES[key] && SHARE_KEYS.some(function (s) { return s[0] === key; }) ? key : 'profile';
     var d = document.getElementById('share-dlg');
     if (!d) {
       d = document.createElement('dialog');

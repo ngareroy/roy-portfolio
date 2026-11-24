@@ -15,6 +15,7 @@ window.PORTFOLIO = {
   },
   "settings": {
     "siteUrl": "https://ngareroy.github.io/roy-portfolio/",
+    "cvSiteUrl": "https://ngareroy.github.io/",
     "accent": "#3E6B52",
     "defaultTheme": "auto",
     "currency": {

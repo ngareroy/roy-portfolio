@@ -336,22 +336,26 @@
     ].join('\n');
   }
 
-  function noscriptHtml(c) {
+  function noscriptHtml(c, variant) {
     var p = c.profile || {};
     return [
       '<section class="wrap" style="padding:48px 20px">',
       '                <h1>' + esc(p.name || '') + '</h1>',
       '                <p>' + esc([p.title, p.location].filter(Boolean).join(' · ')) + '</p>',
       '                <p>' + (p.email ? 'Email: <a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' : '') + (p.phone ? ' · Phone: ' + esc(p.phone) : '') + '</p>',
-      '                <p>Please enable JavaScript to see the full portfolio, CV and rate card.</p>',
+      '                <p>Please enable JavaScript to see the full ' + (variant === 'employer' ? 'profile and CV' : 'portfolio, CV and rate card') + '.</p>',
       '            </section>'
     ].join('\n');
   }
-  /* Update the generated parts of index.html (social preview tags + no-JS fallback). */
-  function updateIndexHtml(html, c) {
+  /* Update the generated parts of index.html (social preview tags + no-JS fallback).
+     opts.site (build only) is written between the SITE-CONFIG markers as window.RN_SITE, e.g. the CV site's
+     {variant: 'employer', contentUrl: ...}; without it that block is left as it is. */
+  function updateIndexHtml(html, c, opts) {
+    opts = opts || {};
     html = replaceBlock(html, 'SOCIAL-META', metaTags('profile', c, 0));
     var re = /(<!-- NOSCRIPT:START -->)[\s\S]*?(<!-- NOSCRIPT:END -->)/;
-    if (re.test(html)) html = html.replace(re, '$1\n            ' + noscriptHtml(c) + '\n            $2');
+    if (re.test(html)) html = html.replace(re, '$1\n            ' + noscriptHtml(c, opts.site && opts.site.variant) + '\n            $2');
+    if (opts.site) html = replaceBlock(html, 'SITE-CONFIG', '<script>window.RN_SITE = ' + JSON.stringify(opts.site).replace(/</g, '\\u003c') + ';</script>');
     return html;
   }
 

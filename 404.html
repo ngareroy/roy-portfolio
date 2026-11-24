@@ -33,8 +33,8 @@
             base = /\.github\.io$/i.test(location.hostname) && parts.length > 1 ? '/' + parts[0] + '/' : '/';
         }
         document.getElementById('home').href = base;
-        document.getElementById('rates').href = base + '#/rates';
-        document.getElementById('quote').href = base + '#/quote';
+        document.getElementById("rates").href = base + "#/rates";
+        document.getElementById("quote").href = base + "#/quote";
         var seg = location.pathname.slice(base.length).split('/').filter(Boolean)[0];
         if (['services', 'projects', 'cv', 'rates', 'quote'].indexOf(seg) >= 0) location.replace(base + '#/' + seg);
     })();

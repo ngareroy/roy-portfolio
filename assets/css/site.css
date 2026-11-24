@@ -389,6 +389,8 @@ button.chip[aria-pressed="true"] .chip__n { color: inherit; opacity: .85; }
 .ftr__grid { display: grid; grid-template-columns: minmax(0, 5fr) repeat(3, minmax(0, 3fr)); gap: 32px; }
 .ftr__name { font: 650 1.5rem/1.2 var(--font); letter-spacing: -.015em; margin-bottom: 8px; }
 .ftr__muted { color: var(--footer-muted); }
+.ftr__cross { display: inline-flex; align-items: center; gap: 6px; color: var(--footer-muted); text-decoration: underline; text-underline-offset: 3px; }
+.ftr__cross .ic { width: 14px; height: 14px; }
 .ftr__h { font: 600 .76rem/1.2 var(--font); text-transform: uppercase; letter-spacing: .08em; color: var(--footer-muted); margin-bottom: 12px; }
 .ftr__links { list-style: none; display: grid; gap: 4px; }
 .ftr__links a { text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 3px 0; overflow-wrap: anywhere; }
@@ -530,6 +532,10 @@ button.chip[aria-pressed="true"] .chip__n { color: inherit; opacity: .85; }
 .edu { display: grid; gap: 14px; }
 .edu h3 { font-size: 1.08rem; font-weight: 650; }
 .edu p { color: var(--ink-2); margin: 4px 0 0; }
+.edu-home { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 44px; }
+.edu-home .mini-h { margin-bottom: 12px; }
+.edu h4 { font-size: 1.08rem; font-weight: 650; }
+@media (max-width: 760px) { .edu-home { grid-template-columns: 1fr; } }
 .certs { list-style: none; display: grid; gap: 10px; }
 .certs li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; }
 .certs b { font-weight: 600; }
@@ -722,6 +728,7 @@ button.chip[aria-pressed="true"] .chip__n { color: inherit; opacity: .85; }
 .preview-flag { position: fixed; right: 12px; bottom: 12px; z-index: 95; background: var(--ink); color: var(--bg); font: 600 .74rem/1 var(--font); padding: 7px 10px; border-radius: var(--r-sm); letter-spacing: .04em; }
 .nf { padding-block: var(--sec); }
 .nf .pagehead__title { font-size: clamp(3.5rem, 12vw, 7rem); color: var(--accent-text); }
+.nf .pagehead__title--md { font-size: clamp(2.1rem, 4.6vw, 3.3rem); color: var(--ink); }
 
 /* ---------- motion preferences ---------- */
 @media (prefers-reduced-motion: reduce) {
