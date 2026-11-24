@@ -533,9 +533,9 @@ window.PORTFOLIO = {
         "Firebase",
         "AI-assisted development"
       ],
-      "services": ["school-systems"],
+      "services": ["web-apps", "school-systems", "ai-dev", "app-testing"],
       "links": [
-        { "label": "Try the demo", "url": "https://app.thelearninghub.co.ke/demo" }
+        { "label": "Try the demo Demo Code [SMS]", "url": "https://app.thelearninghub.co.ke/demo" }
       ],
       "images": []
     },
