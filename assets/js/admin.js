@@ -664,6 +664,7 @@
         RN.setPath(draft, path, list); renderSection(true); touch();
         break;
       case 'toggle-preview': togglePreview(); break;
+      case 'pvariant': setPreviewVariant(b.getAttribute('data-variant')); break;
       case 'psize':
         document.querySelectorAll('[data-act="psize"]').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
         document.getElementById('ed-frame-wrap').classList.toggle('is-phone', b.getAttribute('data-size') === 'phone');
@@ -756,10 +757,24 @@
     try { frame.contentWindow.postMessage({ type: 'rn-preview', content: draft, assets: a, route: route || null }, location.origin); } catch (e) { /* frame not ready */ }
   }
   function navigatePreview() { sendPreview(section(current).route); }
+  /* The preview shows the freelance site or the CV site for employers (same content, ?variant=employer). */
+  var previewVariant = LS.get('preview-variant', 'freelance') === 'employer' ? 'employer' : 'freelance';
+  function previewSrc() { return 'index.html?preview=1' + (previewVariant === 'employer' ? '&variant=employer' : '') + section(current).route; }
+  function showPreviewVariant() {
+    document.querySelectorAll('[data-act="pvariant"]').forEach(function (x) { x.setAttribute('aria-pressed', x.getAttribute('data-variant') === previewVariant ? 'true' : 'false'); });
+  }
+  function setPreviewVariant(v) {
+    previewVariant = v === 'employer' ? 'employer' : 'freelance';
+    LS.set('preview-variant', previewVariant);
+    showPreviewVariant();
+    previewReady = false;
+    frame.src = previewSrc();
+  }
   function startPreview() {
     var wide = window.matchMedia('(min-width: 1181px)').matches;
     document.getElementById('ed-preview-btn').setAttribute('aria-pressed', wide ? 'true' : 'false');
-    frame.src = 'index.html?preview=1' + section(current).route;
+    showPreviewVariant();
+    frame.src = previewSrc();
   }
   function togglePreview() {
     var shell = document.getElementById('ed-shell');

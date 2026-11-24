@@ -66,8 +66,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .ed-loading { padding: 40px; color: var(--muted); }
 .ed-preview { display: flex; flex-direction: column; border-left: 1px solid var(--line); background: #E7E3DB; min-width: 0; }
 .ed-shell.no-preview .ed-preview { display: none; }
-.ed-preview__bar { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-bottom: 1px solid var(--line); font-weight: 600; font-size: .85rem; }
-.ed-preview__sizes { margin-left: auto; display: inline-flex; border: 1px solid var(--line-2); border-radius: 6px; overflow: hidden; }
+.ed-preview__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 8px 10px; border-bottom: 1px solid var(--line); font-weight: 600; font-size: .85rem; }
+.ed-preview__sizes { display: inline-flex; border: 1px solid var(--line-2); border-radius: 6px; overflow: hidden; }
+.ed-preview__bar > span:first-child { margin-right: auto; }
 .ed-preview__sizes button { border: 0; background: var(--panel); padding: 5px 10px; font-size: .8rem; cursor: pointer; }
 .ed-preview__sizes button[aria-pressed="true"] { background: var(--ink); color: #fff; }
 .ed-preview__frame { flex: 1; display: flex; justify-content: center; overflow: auto; padding: 0; }

@@ -15,7 +15,8 @@
      no rates, prices or quote basket, and "Contact me" in place of "Get a quote". It reads its content (and
      uploaded files) from the freelance site at RN_SITE.contentUrl, so editor changes show on both sites. */
   var SITE = window.RN_SITE || {};
-  var EMPLOYER = SITE.variant === 'employer';
+  // The editor's preview can show the CV site too (index.html?preview=1&variant=employer).
+  var EMPLOYER = SITE.variant === 'employer' || (PREVIEW && /[?&]variant=employer\b/.test(location.search));
   var remoteBase = '';   // set when the content came from SITE.contentUrl
 
   /* ---------- storage (never throws) ---------- */
