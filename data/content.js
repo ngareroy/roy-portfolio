@@ -11,7 +11,7 @@
 window.PORTFOLIO = {
   "meta": {
     "schema": 1,
-    "updated": "2026-11-24"
+    "updated": "2026-11-25"
   },
   "settings": {
     "siteUrl": "https://ngareroy.github.io/roy-portfolio/",
@@ -43,7 +43,7 @@ window.PORTFOLIO = {
     "fullName": "Royallans Nyamiaka",
     "title": "ICT Administrator & Web Systems Developer",
     "headline": "I build websites and school systems, keep IT running for schools and businesses, and set teams up with AI.",
-    "intro": "Based in Malindi on the Kenyan coast. On-site across Kilifi County, remote anywhere.",
+    "intro": "Based in Malindi. On-site across Kilifi County, remote anywhere.",
     "summary": [
       "I'm a hands-on ICT professional with {years}+ years of experience keeping networks, servers, devices and users running. As ICT Administrator at The Learning Hub School in Malindi, I manage the school's IT infrastructure, user support, access control, backups and endpoint security. I developed the school management system the school uses, where teachers record and analyse results and parents view and track progress, and I'm now building a transport tracking app that links parents with the school's transport section.",
       "I also build and look after websites. I developed and maintain The Learning Hub School's website, and built the website for FRENA, a community organization, working with both to improve their SEO and business profiles. For FRENA I also set up and registered their domain, transferred their website and set up professional email. At the school I set up Google Workspace, created staff emails and trained staff to use it.",
@@ -55,7 +55,7 @@ window.PORTFOLIO = {
     "email": "royngare@gmail.com",
     "phone": "+254 708 061 237",
     "whatsapp": "254708061237",
-    "photo": "",
+    "photo": "assets/uploads/rooy-mwv8ix57.webp",
     "cvPdf": "assets/docs/Royallans-Nyamiaka-CV.pdf",
     "availability": {
       "status": "available",
@@ -76,7 +76,7 @@ window.PORTFOLIO = {
     ],
     "facts": [
       { "value": "{years}+", "label": "years of professional IT and data experience" },
-      { "value": "2", "label": "organisation websites built and maintained" },
+      { "value": "3", "label": "organisation websites built and maintained" },
       { "value": "ISO 27001", "label": "Information Security Associate" },
       { "value": "BSc", "label": "Computer Security and Forensics" }
     ],
