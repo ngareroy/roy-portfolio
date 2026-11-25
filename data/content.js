@@ -14,7 +14,7 @@ window.PORTFOLIO = {
     "updated": "2026-11-25"
   },
   "settings": {
-    "siteUrl": "https://ngareroy.github.io/roy-portfolio/",
+    "siteUrl": "https://ngareroy.github.io/",
     "cvSiteUrl": "https://ngareroy.github.io/",
     "accent": "#3E6B52",
     "defaultTheme": "auto",
