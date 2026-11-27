@@ -43,7 +43,7 @@ window.PORTFOLIO = {
     "fullName": "Royallans Nyamiaka",
     "title": "ICT Administrator, Web Developer & Graphic Designer",
     "headline": "I keep networks, servers, devices and users running: hands-on IT administration and support, backed by {years}+ years of professional experience.",
-    "intro": "Based in Malindi. On-site across Kilifi County, remote anywhere.",
+    "intro": "Based in Malindi, Kenya. Open to relocating for the right role, and to remote work.",
     "summary": [
       "I'm a hands-on ICT professional with {years}+ years of professional experience. As ICT Administrator at The Learning Hub School in Malindi, I manage, maintain and troubleshoot the school's networks, servers, software and devices, and give staff and learners responsive technical support. I administer user accounts, access permissions, backups and endpoint security, applying data-protection and confidentiality practices to sensitive records.",
       "I train and support staff and learners in using digital tools, and I designed and deliver a digital-literacy course for users of varying ability. I set up Google Workspace for the school, created staff email accounts and the working environment, and trained staff to use it. My IT path started with systems and network support at Moi University (LAN/WAN networking, Wi-Fi, hardware, software and endpoint security) and continued with a cybersecurity and digital forensics internship at Global Forensics Services.",
@@ -52,7 +52,7 @@ window.PORTFOLIO = {
     ],
     "careerStart": "2020-01",
     "location": "Malindi, Kilifi County, Kenya",
-    "workModes": ["On-site in Malindi & Kilifi County", "Remote, anywhere"],
+    "workModes": ["Open to relocation", "Remote, anywhere", "On-site across Malindi & Kilifi County"],
     "email": "royngare@gmail.com",
     "phone": "+254 708 061 237",
     "whatsapp": "254708061237",
@@ -108,6 +108,7 @@ window.PORTFOLIO = {
     ],
     "workedWith": ["The Learning Hub School", "FRENA", "CloudFactory", "Global Forensics Services", "Moi University"],
     "additional": [
+      "Open to relocation for the right role",
       "Valid Certificate of Good Conduct (Police Clearance) available",
       "Committed to safeguarding and confidentiality",
       "Referees available on request"
