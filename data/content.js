@@ -11,7 +11,7 @@
 window.PORTFOLIO = {
   "meta": {
     "schema": 1,
-    "updated": "2026-11-25"
+    "updated": "2026-11-27"
   },
   "settings": {
     "siteUrl": "https://ngareroy.github.io/roy-portfolio/",
@@ -42,13 +42,13 @@ window.PORTFOLIO = {
     "name": "Roy Nyamiaka",
     "fullName": "Royallans Nyamiaka",
     "title": "ICT Administrator, Web Developer & Graphic Designer",
-    "headline": "I build websites and school systems, design for print, keep IT running for schools and businesses, and set teams up with AI.",
+    "headline": "I keep networks, servers, devices and users running: hands-on IT administration and support, backed by {years}+ years of professional experience.",
     "intro": "Based in Malindi. On-site across Kilifi County, remote anywhere.",
     "summary": [
-      "I'm a hands-on ICT professional with {years}+ years of experience keeping networks, servers, devices and users running. As ICT Administrator at The Learning Hub School in Malindi, I manage the school's IT infrastructure, user support, access control, backups and endpoint security. I developed the school management system the school uses, where teachers record and analyse results and parents view and track progress, and I'm now building a transport tracking app that links parents with the school's transport section.",
-      "I also build and look after websites. I developed and maintain The Learning Hub School's website, and built the website for FRENA, a community organization, working with both to improve their SEO and business profiles. For FRENA I also set up and registered their domain, transferred their website and set up professional email. At the school I set up Google Workspace, created staff emails and trained staff to use it.",
-      "I am also a graphic designer: I have designed yearbook publications, posters, banners and a billboard for The Learning Hub School, using Canva and Adobe Photoshop. My web work brings together UI/UX design (Figma, Adobe XD, wireframing and prototyping), full-stack development (JavaScript, TypeScript, PHP, React, Next.js and Firebase) and a security-first approach that includes vulnerability assessment, penetration testing and security audits.",
-      "Since 2020 I have worked remotely as a data analyst for CloudFactory, doing data, image and video analysis for AI and machine-learning projects. I hold a BSc in Computer Security and Forensics and an ISO/IEC 27001 Information Security Associate credential, so security and data protection are part of everything I build."
+      "I'm a hands-on ICT professional with {years}+ years of professional experience. As ICT Administrator at The Learning Hub School in Malindi, I manage, maintain and troubleshoot the school's networks, servers, software and devices, and give staff and learners responsive technical support. I administer user accounts, access permissions, backups and endpoint security, applying data-protection and confidentiality practices to sensitive records.",
+      "I train and support staff and learners in using digital tools, and I designed and deliver a digital-literacy course for users of varying ability. I set up Google Workspace for the school, created staff email accounts and the working environment, and trained staff to use it. My IT path started with systems and network support at Moi University (LAN/WAN networking, Wi-Fi, hardware, software and endpoint security) and continued with a cybersecurity and digital forensics internship at Global Forensics Services.",
+      "Alongside running IT, I build the systems the school relies on: the school management system where teachers record and analyse results and parents view and track progress, and, in development, a fees and records system and a transport tracking app that links parents with the school's transport section. I also build and maintain websites, including The Learning Hub School's and FRENA's, with SEO, business profiles, domains and professional email, and I design print work such as yearbooks, posters, banners and a billboard.",
+      "Since 2020 I have worked remotely as a data analyst for CloudFactory, doing data, image and video analysis for AI and machine-learning projects. I hold a BSc in Computer Security and Forensics and an ISO/IEC 27001 Information Security Associate credential, so security and data protection are part of everything I do."
     ],
     "careerStart": "2020-01",
     "location": "Malindi, Kilifi County, Kenya",
@@ -77,29 +77,32 @@ window.PORTFOLIO = {
     ],
     "facts": [
       { "value": "{years}+", "label": "years of professional IT and data experience" },
-      { "value": "3", "label": "organisation websites built and maintained" },
+      { "value": "Since 2023", "label": "ICT Administrator & IT Support at The Learning Hub School" },
       { "value": "ISO 27001", "label": "Information Security Associate" },
       { "value": "BSc", "label": "Computer Security and Forensics" }
     ],
     "focusAreas": [
-      "Websites",
+      "IT support & troubleshooting",
+      "Networks, servers & devices",
+      "User accounts & access",
+      "Backups & endpoint security",
+      "Google Workspace & Microsoft 365",
       "School systems",
+      "Websites",
       "Graphic design",
-      "SEO & business profiles",
-      "Domains & email",
-      "Google Workspace",
-      "IT support",
       "Data analysis",
       "AI setup & training"
     ],
     "highlights": [
-      "Developed The Learning Hub School's management system: teachers record and analyse results, and parents view and track progress",
-      "Building a transport tracking app that links parents with the school's transport section and tracks learners' journeys",
-      "Building a fees and records system for the school’s administration: invoices, payments, balances, statements and fee reminders",
+      "Keep The Learning Hub School's networks, servers, software and devices running, with responsive technical support for staff and learners",
+      "Administer user accounts, access permissions, backups and endpoint security, protecting confidential records",
+      "Set up Google Workspace for The Learning Hub School, created staff email accounts and trained staff to use it",
+      "Designed and deliver a digital-literacy course for staff and learners of varying ability",
+      "Developed the school management system: teachers record and analyse results, and parents view and track progress",
+      "Building the school's fees and records system and a transport tracking app that links parents with the transport section",
+      "Built and maintain the websites of FRENA and The Learning Hub School, including SEO, business profiles, domain and professional email",
       "Designed yearbook publications, posters, banners and a billboard for The Learning Hub School",
       "Built Player Ratings, a player rating and management platform for football academies",
-      "Built and maintain the websites of FRENA and The Learning Hub School, including SEO, business profiles, domain and professional email",
-      "Set up Google Workspace for The Learning Hub School and trained staff to use it",
       "{years} years of remote data, image and video analysis for AI/ML projects at CloudFactory",
       "Valid Certificate of Good Conduct, committed to safeguarding and confidentiality"
     ],
@@ -112,6 +115,11 @@ window.PORTFOLIO = {
   },
   "serviceGroups": [
     {
+      "id": "support",
+      "title": "Run & support",
+      "blurb": "Networks, devices and accounts that stay up, secure and backed up."
+    },
+    {
       "id": "build",
       "title": "Build",
       "blurb": "Websites, web apps and systems made to fit how you work."
@@ -120,11 +128,6 @@ window.PORTFOLIO = {
       "id": "design-test",
       "title": "Design & test",
       "blurb": "Screens people understand, checked before your users find the bugs."
-    },
-    {
-      "id": "support",
-      "title": "Run & support",
-      "blurb": "Networks, devices and accounts that stay up, secure and backed up."
     },
     {
       "id": "grow",
@@ -540,6 +543,33 @@ window.PORTFOLIO = {
       "images": []
     },
     {
+      "id": "learning-hub-workspace",
+      "cover": "Google Workspace",
+      "title": "Google Workspace Setup & Staff Training",
+      "client": "The Learning Hub School, Malindi",
+      "period": "",
+      "status": "completed",
+      "statusNote": "",
+      "category": "IT & cloud",
+      "featured": true,
+      "summary": "Set up Google Workspace for the school: created the staff email accounts, set up the working environment and trained staff to use it.",
+      "features": ["Google Workspace setup", "Staff email accounts", "Working environment set up", "Staff training"],
+      "challenge": "",
+      "approach": "",
+      "outcome": "",
+      "role": "ICT Administrator",
+      "stack": ["Google Workspace"],
+      "skills": [
+        "Google Workspace",
+        "User accounts & access management",
+        "Business email setup",
+        "Staff training & digital literacy"
+      ],
+      "services": ["workspace"],
+      "links": [],
+      "images": []
+    },
+    {
       "challenge": "",
       "approach": "",
       "outcome": "",
@@ -601,39 +631,38 @@ window.PORTFOLIO = {
       "images": []
     },
     {
+      "id": "learning-hub-website",
+      "cover": "School website",
+      "title": "The Learning Hub School Website",
+      "client": "The Learning Hub School, Malindi",
+      "period": "",
+      "status": "completed",
+      "statusNote": "I manage and maintain it",
+      "category": "Websites",
+      "featured": true,
+      "summary": "Developed the school's website, which I manage and maintain, and worked with the school to improve its SEO and business profile.",
+      "features": [
+        "Website design and development",
+        "SEO improvements",
+        "Business profile improvements",
+        "Ongoing management and maintenance"
+      ],
       "challenge": "",
       "approach": "",
       "outcome": "",
-      "period": "",
-      "images": [],
-      "id": "player-ratings",
-      "cover": "Player Ratings",
-      "title": "Player Ratings",
-      "client": "For football academies and coaching staff",
-      "status": "completed",
-      "statusNote": "Live",
-      "category": "Web apps",
-      "featured": true,
-      "summary": "A FIFA-inspired player rating and management platform for football academies: a public portal for parents and learners, and an admin panel for coaches.",
-      "features": [
-        "Player cards with overall ratings and radar charts across six categories",
-        "Position-weighted ratings for 15 positions, including a goalkeeping module",
-        "Formation builder with Auto-Fill Best XI",
-        "Match centre: fixtures and per-player match stats",
-        "Attendance tracking and training notes",
-        "Assessment periods with a Biggest Improvers leaderboard",
-        "Scouting for trial players, with one-click conversion to the squad",
-        "Awards, player comparison, club news and public fixtures",
-        "Player self-assessments compared with coach ratings",
-        "Role-based access for head and assistant coaches"
+      "role": "Web developer",
+      "stack": [],
+      "skills": [
+        "Web development (responsive, mobile-first)",
+        "SEO setup",
+        "Business online profiles",
+        "Website maintenance"
       ],
-      "role": "Design and development",
-      "stack": ["React", "Vite", "Firebase", "Vercel"],
-      "skills": ["Web app development", "UI/UX design", "React", "Firebase"],
-      "services": ["web-apps", "ux-testing"],
+      "services": ["websites", "business-online"],
       "links": [
-        { "label": "Visit the live site", "url": "https://hubfc.vercel.app/" }
-      ]
+        { "label": "Visit the website", "url": "https://thelearninghub.co.ke" }
+      ],
+      "images": []
     },
     {
       "id": "frena-website",
@@ -676,65 +705,39 @@ window.PORTFOLIO = {
       "images": []
     },
     {
-      "id": "learning-hub-website",
-      "cover": "School website",
-      "title": "The Learning Hub School Website",
-      "client": "The Learning Hub School, Malindi",
+      "challenge": "",
+      "approach": "",
+      "outcome": "",
       "period": "",
+      "images": [],
+      "id": "player-ratings",
+      "cover": "Player Ratings",
+      "title": "Player Ratings",
+      "client": "For football academies and coaching staff",
       "status": "completed",
-      "statusNote": "I manage and maintain it",
-      "category": "Websites",
+      "statusNote": "Live",
+      "category": "Web apps",
       "featured": true,
-      "summary": "Developed the school's website, which I manage and maintain, and worked with the school to improve its SEO and business profile.",
+      "summary": "A FIFA-inspired player rating and management platform for football academies: a public portal for parents and learners, and an admin panel for coaches.",
       "features": [
-        "Website design and development",
-        "SEO improvements",
-        "Business profile improvements",
-        "Ongoing management and maintenance"
+        "Player cards with overall ratings and radar charts across six categories",
+        "Position-weighted ratings for 15 positions, including a goalkeeping module",
+        "Formation builder with Auto-Fill Best XI",
+        "Match centre: fixtures and per-player match stats",
+        "Attendance tracking and training notes",
+        "Assessment periods with a Biggest Improvers leaderboard",
+        "Scouting for trial players, with one-click conversion to the squad",
+        "Awards, player comparison, club news and public fixtures",
+        "Player self-assessments compared with coach ratings",
+        "Role-based access for head and assistant coaches"
       ],
-      "challenge": "",
-      "approach": "",
-      "outcome": "",
-      "role": "Web developer",
-      "stack": [],
-      "skills": [
-        "Web development (responsive, mobile-first)",
-        "SEO setup",
-        "Business online profiles",
-        "Website maintenance"
-      ],
-      "services": ["websites", "business-online"],
+      "role": "Design and development",
+      "stack": ["React", "Vite", "Firebase", "Vercel"],
+      "skills": ["Web app development", "UI/UX design", "React", "Firebase"],
+      "services": ["web-apps", "ux-testing"],
       "links": [
-        { "label": "Visit the website", "url": "https://thelearninghub.co.ke" }
-      ],
-      "images": []
-    },
-    {
-      "id": "learning-hub-workspace",
-      "cover": "Google Workspace",
-      "title": "Google Workspace Setup & Staff Training",
-      "client": "The Learning Hub School, Malindi",
-      "period": "",
-      "status": "completed",
-      "statusNote": "",
-      "category": "IT & cloud",
-      "featured": true,
-      "summary": "Set up Google Workspace for the school: created the staff email accounts, set up the working environment and trained staff to use it.",
-      "features": ["Google Workspace setup", "Staff email accounts", "Working environment set up", "Staff training"],
-      "challenge": "",
-      "approach": "",
-      "outcome": "",
-      "role": "ICT Administrator",
-      "stack": ["Google Workspace"],
-      "skills": [
-        "Google Workspace",
-        "User accounts & access management",
-        "Business email setup",
-        "Staff training & digital literacy"
-      ],
-      "services": ["workspace"],
-      "links": [],
-      "images": []
+        { "label": "Visit the live site", "url": "https://hubfc.vercel.app/" }
+      ]
     },
     {
       "challenge": "",
@@ -771,14 +774,14 @@ window.PORTFOLIO = {
       "points": [
         "Manage, maintain and troubleshoot the school's IT infrastructure, including networks, servers, software and devices, and provide responsive technical support that keeps systems reliable and secure.",
         "Administer user accounts, access permissions, backups and endpoint security, applying data-protection and confidentiality practices to sensitive records.",
+        "Train and support staff and learners in using digital tools; designed and deliver a digital-literacy course for users of varying ability.",
+        "Set up Google Workspace for the school, created staff email accounts and the working environment, and trained staff to use it.",
+        "Identify and implement practical digital solutions and automation that streamline workflows and improve efficiency.",
         "Developed, tested and implemented two database-driven management information systems: one for learner results and staff records, and one for fee management and student records, using AI-assisted tools.",
         "Built centralised digital records and reporting, improving data quality, accuracy and accessibility while reducing manual, paper-based processes.",
-        "Identify and implement practical digital solutions and automation that streamline workflows and improve efficiency.",
-        "Train and support staff and learners in using digital tools; designed and deliver a digital-literacy course for users of varying ability.",
+        "Building a transport tracking app that links parents with the school's transport section and tracks learners' journeys.",
         "Developed, manage and maintain the school website, and worked with the school to improve its SEO and business profile.",
-        "Designed the school’s yearbook publications, posters, banners and billboard using Canva and Adobe Photoshop.",
-        "Set up Google Workspace for the school, created staff email accounts and the working environment, and trained staff to use it.",
-        "Building a transport tracking app that links parents with the school's transport section and tracks learners' journeys."
+        "Designed the school’s yearbook publications, posters, banners and billboard using Canva and Adobe Photoshop."
       ],
       "skills": [
         "IT infrastructure management",
@@ -1601,8 +1604,8 @@ window.PORTFOLIO = {
   },
   "testimonials": [],
   "share": {
-    "profile": "I'm Roy Nyamiaka, an ICT administrator and web & systems developer in Malindi. I build websites and school management systems, and offer IT support, data analysis and AI setup & training. See my work here:",
-    "cv": "My CV: ICT administration, web & systems development and data analysis, with {years}+ years of experience. Open to roles and contracts:",
+    "profile": "I'm Roy Nyamiaka, an ICT administrator in Malindi with {years}+ years of professional experience. I keep networks, servers, devices and users running, and I also build school systems and websites. See my work here:",
+    "cv": "My CV: ICT administration and IT support, plus school systems, web development and data analysis, with {years}+ years of experience. Open to roles and contracts:",
     "rates": "My rate card for websites, school systems, IT support, domains, data and AI services, in KES. You can request a quote right from the page:",
     "quote": "Need a website, IT support or a school system? Send me your request here and I'll come back to you with a quote:",
     "projects": "Projects I've delivered and am working on: a school management system, a school transport tracking app, organisation websites with SEO, domains and email, and Google Workspace setup:"

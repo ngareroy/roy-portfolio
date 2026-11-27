@@ -263,6 +263,9 @@
     return location.origin + location.pathname.replace(/[^/]*$/, '');
   }
   function pageUrl(key) {
+    // Shared CV links go to the CV site for employers when it is set, like the website line on the CV.
+    var cvSite = RN.normBase(C.settings.cvSiteUrl);
+    if (key === 'cv' && cvSite && !PREVIEW) return cvSite + RN.PAGES.cv.path;
     var b = baseUrl();
     var p = RN.PAGES[key] || RN.PAGES.profile;
     if (!b) return location.href.split('#')[0].split('?')[0] + p.hash;
@@ -789,7 +792,8 @@
   };
   function cvBody() {
     var p = C.profile;
-    var site = RN.normBase(C.settings.siteUrl);
+    // A CV is for employers, so it links to the CV site (no rates); the freelance site is the fallback.
+    var site = RN.normBase(C.settings.cvSiteUrl || C.settings.siteUrl);
     var head = '<header class="cv__head"><div><h1 class="cv__name">' + e(p.fullName || p.name) + '</h1>' +
       '<p class="cv__title">' + e(p.title) + '</p></div>' +
       '<ul class="cv__contact">' +
